@@ -127,7 +127,10 @@ export const siteConfig: SiteConfig = {
 	// 字体配置
 	font: {
 		zenMaruGothic: {
-			enable: true, // 启用全局圆体
+			enable: false, // 启用全局圆体
+		},
+		milkCustomFont: {
+			enable: true, // 启用自定义字体
 		},
 	},
 };
@@ -279,12 +282,12 @@ export const commentConfig: CommentConfig = {
 };
 
 export const announcementConfig: AnnouncementConfig = {
-	title: "Announcement", // 公告标题
-	content: "Welcome to my blog! This is a sample announcement.", // 公告内容
+	title: "公告！", // 公告标题
+	content: "欢迎来到我的博客！", // 公告内容
 	closable: true, // 允许用户关闭公告
 	link: {
 		enable: true, // 启用链接
-		text: "Learn More", // 链接文本
+		text: "查看博客模板", // 链接文本
 		url: "/about/", // 链接 URL
 		external: false, // 内部链接
 	},
