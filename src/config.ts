@@ -1,3 +1,4 @@
+import { factory } from "typescript";
 import type {
 	AnnouncementConfig,
 	CommentConfig,
@@ -49,11 +50,11 @@ export const siteConfig: SiteConfig = {
 				"/assets/desktop-banner/d1.webp",
 				"/assets/desktop-banner/d2.webp",
 				"/assets/desktop-banner/d3.webp",
-				"/assets/desktop-banner/d4.webp",
 				"/assets/desktop-banner/d5.webp",
 				"/assets/desktop-banner/d6.webp",
 				"/assets/desktop-banner/d7.webp",
 				"/assets/desktop-banner/d8.webp",
+				"/assets/desktop-banner/milk-d1.png",
 			], // 桌面横幅图片
 			mobile: [
 				"/assets/mobile-banner/m1.webp",
@@ -72,7 +73,7 @@ export const siteConfig: SiteConfig = {
 		carousel: {
 			enable: true, // 为 true 时：为多张图片启用轮播。为 false 时：从数组中随机显示一张图片
 
-			interval: 1.5, // 轮播间隔时间（秒）
+			interval: 3, // 轮播间隔时间（秒）
 		},
 
 		// PicFlow API支持(智能图片API)
@@ -86,14 +87,9 @@ export const siteConfig: SiteConfig = {
 
 		homeText: {
 			enable: true, // 在主页显示自定义文本
-			title: "Beautiful Mizuki!", // 主页横幅主标题
+			title: "Milk 的个人博客", // 主页横幅主标题
 
-			subtitle: [
-				"A Showcase Demo Site",
-				"Carousel Highlight: Innovation",
-				"Carousel Focus: User Experience",
-				"Carousel Spot: Core Advantages",
-			],
+			subtitle: ["数学的严谨", "编程的逻辑", "生活的记录"],
 			typewriter: {
 				enable: true, // 启用副标题打字机效果
 
@@ -142,11 +138,11 @@ export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 			"/assets/desktop-banner/d1.webp",
 			"/assets/desktop-banner/d2.webp",
 			"/assets/desktop-banner/d3.webp",
-			"/assets/desktop-banner/d4.webp",
 			"/assets/desktop-banner/d5.webp",
 			"/assets/desktop-banner/d6.webp",
 			"/assets/desktop-banner/d7.webp",
 			"/assets/desktop-banner/d8.webp",
+			"/assets/desktop-banner/milk-d1.png",
 		], // 桌面横幅图片
 		mobile: [
 			"/assets/mobile-banner/m1.webp",
@@ -175,7 +171,7 @@ export const navBarConfig: NavBarConfig = {
 		LinkPreset.Archive,
 		// 支持自定义导航栏链接,并且支持多级菜单,3.1版本新加
 		{
-			name: "Links",
+			name: "相关链接",
 			url: "/links/",
 			icon: "material-symbols:link",
 			children: [
@@ -194,7 +190,7 @@ export const navBarConfig: NavBarConfig = {
 			],
 		},
 		{
-			name: "My",
+			name: "我的",
 			url: "/content/",
 			icon: "material-symbols:person",
 			children: [
@@ -208,13 +204,13 @@ export const navBarConfig: NavBarConfig = {
 			],
 		},
 		{
-			name: "About",
+			name: "关于",
 			url: "/content/",
 			icon: "material-symbols:info",
 			children: [LinkPreset.About, LinkPreset.Friends],
 		},
 		{
-			name: "Others",
+			name: "其他",
 			url: "#",
 			icon: "material-symbols:more-horiz",
 			children: [
@@ -248,21 +244,11 @@ export const profileConfig: ProfileConfig = {
 			icon: "fa6-brands:bilibili",
 			url: "https://space.bilibili.com/1573375437",
 		},
-		// {
-		// 	name: "Gitee",
-		// 	icon: "mdi:git",
-		// 	url: "https://gitee.com/matsuzakayuki",
-		// },
 		{
 			name: "GitHub",
 			icon: "fa6-brands:github",
 			url: "https://github.com/milk2715093695",
 		},
-		// {
-		// 	name: "Discord",
-		// 	icon: "fa6-brands:discord",
-		// 	url: "https://discord.gg/MqW6TcQtVM",
-		// },
 	],
 	// Umami统计部份，记得在layout插入Umami的head标签
 	umami: {
@@ -461,16 +447,16 @@ export const pioConfig: import("./types/config").PioConfig = {
 	mode: "draggable", // 默认为可拖拽模式
 	hiddenOnMobile: true, // 默认在移动设备上隐藏
 	dialog: {
-		welcome: "Welcome to Mizuki Website!", // 欢迎词
+		welcome: "欢迎！这里是 Milk 的个人博客。", // 欢迎词
 		touch: [
-			"What are you doing?",
-			"Stop touching me!",
-			"HENTAI!",
-			"Don't bully me like that!",
+			"hmm，今天要做什么呢？",
+			"戳太多次了啦 QWQ",
+			"今天心情不错哦~",
+			"怎么啦？",
 		], // 触摸提示
-		home: "Click here to go back to homepage!", // 首页提示
-		skin: ["Want to see my new outfit?", "The new outfit looks great~"], // 换装提示
-		close: "QWQ See you next time~", // 关闭提示
+		home: "戳这里可以回到首页哦~", // 首页提示
+		skin: ["想要换装吗？", "换装需要消耗一些能量哦~"], // 换装提示
+		close: "再见~", // 关闭提示
 		link: "https://github.com/matsuzaka-yuki/Mizuki", // 关于链接
 	},
 };
