@@ -49,17 +49,17 @@ date: 2025-09-15
 
 ### 2.1. 打开 Virtual Device Manager
  
-![Virtual Device Manager](1.png)
+![Virtual Device Manager](1.webp)
 
 ### 2.2. 选择合适的 AVD
 
 Android 7 对应的 API 版本是 24 或者 25，我这里的 Pixel XL 和 Pixel 都是符合要求的，但是 GooglePlay 版本的 AVD 不支持 Root，因此我这里选择了 Pixel XL 作为目标设备。
 
-![Select AVD](2.png)
+![Select AVD](2.webp)
 
 ### 2.3. 选择合适的 Android API 版本
 
-![Select API](3.png)
+![Select API](3.webp)
 
 等待下载完成后，你就可以在 Virtual Device Manager 中看到或者打开你创建的 AVD 了。此时，你就有了自己的一个 Android 测试环境了，如果不需要进行 Xposed 开发，那么到此为止就已经可以使用了。
 
@@ -158,7 +158,7 @@ adb remount
 
 如果目前为止没有错误的话，应该看到如下输出：
 
-![adb root](4.png)
+![adb root](4.webp)
 
 ## 5. 安装 Xposed Installer
 
@@ -166,7 +166,7 @@ adb remount
 
 安装后，打开 Xposed Installer，应该会看到如下界面：
 
-![安装 Xposed Installer](5.png)
+![安装 Xposed Installer](5.webp)
 
 接下来需要进行激活 Xposed 框架。
 
@@ -199,7 +199,7 @@ vim xposed-v89-sdk25-arm64/META-INF/com/google/android/flash-script.sh
 1. 由于我们已经进行过了 `adb remount`，所以不需要再进行 `mount -o remount,rw /system`，当然，理论上如果要进行 `mount -o remount,rw /system` 也是可以的，但是实测会出现一些问题，具体原因我没有深入研究，所以这里直接省略了。
 2. 由于我使用的 AVD 是 arm64 的，因此有一些目录和文件是不存在的，例如不存在 `/system/lib32` 目录，需要进行适当的修改。
 
-![对比实际内容](6.png)
+![对比实际内容](6.webp)
 
 修改后的 `flash-script.sh` 如下：
 ```bash
@@ -395,7 +395,7 @@ mv META-INF/com/google/android/flash-script.sh ./
 
 此时使用 `ls` 应该能看到如下结果：
 
-![ls 结果](7.png)
+![ls 结果](7.webp)
 
 随后将 `xposed-v89-sdk25-arm64` 目录推送到 AVD 中：
 ```bash
@@ -403,11 +403,11 @@ adb push ./ /sdcard/Download/xposed
 ```
 
 进入 `adb shell` 并在 `/sdcard/Download/xposed` 目录下执行 `flash-script.sh`：
-![执行结果](8.png)>
+![执行结果](8.webp)>
 
 此时打开 `Xposed Installer` 应该能看到如下结果：
 
-![Xposed Installer](9.png)
+![Xposed Installer](9.webp)
 
 > 如果这个时候很久都发现动不了，基本上是覆盖了不该覆盖的文件，这个时候只能恢复备份的文件了。
 >
@@ -417,6 +417,6 @@ adb push ./ /sdcard/Download/xposed
 
 执行 `adb reboot` 重启 AVD，重启后打开 `Xposed Installer` 应该能看到如下结果：
 
-![Xposed Installer](10.png)
+![Xposed Installer](10.webp)
 
 如果出现了这个界面，说明 Xposed 框架已经安装成功。
