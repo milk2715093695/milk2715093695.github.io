@@ -1,4 +1,10 @@
-import type { DARK_MODE, LIGHT_MODE, WALLPAPER_BANNER, WALLPAPER_FULLSCREEN, WALLPAPER_NONE } from "../constants/constants";
+import type {
+	DARK_MODE,
+	LIGHT_MODE,
+	WALLPAPER_BANNER,
+	WALLPAPER_FULLSCREEN,
+	WALLPAPER_NONE,
+} from "../constants/constants";
 
 export type SiteConfig = {
 	title: string;
@@ -49,6 +55,9 @@ export type SiteConfig = {
 	font: {
 		zenMaruGothic: {
 			enable: boolean; // 是否使用 ZenMaruGothic-Black 作为全局字体
+		};
+		milkCustomFont: {
+			enable: boolean; // 是否使用 MilkCustomFont 作为全局字体
 		};
 		hanalei: {
 			enable: boolean; // 是否使用 Hanalei 作为全局字体
@@ -189,7 +198,10 @@ type TwikooConfig = {
 
 export type LIGHT_DARK_MODE = typeof LIGHT_MODE | typeof DARK_MODE;
 
-export type WALLPAPER_MODE = typeof WALLPAPER_BANNER | typeof WALLPAPER_FULLSCREEN | typeof WALLPAPER_NONE;
+export type WALLPAPER_MODE =
+	| typeof WALLPAPER_BANNER
+	| typeof WALLPAPER_FULLSCREEN
+	| typeof WALLPAPER_NONE;
 
 export type BlogPostData = {
 	body: string;
