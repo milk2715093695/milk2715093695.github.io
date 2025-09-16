@@ -12,7 +12,7 @@ import Key from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
 
 // 音乐播放器模式，可选 "local" 或 "meting"，从本地配置中获取或使用默认值 "meting"
-let mode = musicPlayerConfig.mode ?? "meting";
+let mode = musicPlayerConfig.mode ?? "local";
 // Meting API 地址，从配置中获取或使用默认地址(bilibili.uno(由哔哩哔哩松坂有希公益管理)),服务器在海外,部分音乐平台可能不支持并且速度可能慢,也可以自建Meting API
 let meting_api =
 	musicPlayerConfig.meting_api ??
@@ -68,27 +68,59 @@ let volumeBar: HTMLElement;
 const localPlaylist = [
 	{
 		id: 1,
-		title: "ひとり上手",
-		artist: "Kaya",
-		cover: "assets/music/cover/hitori.jpg",
-		url: "assets/music/url/hitori.mp3",
-		duration: 240,
+		title: "落樱谷",
+		artist: "路灰气球z",
+		cover: "assets/music/cover/落樱谷.jpg",
+		url: "assets/music/url/落樱谷.m4a",
+		duration: 214,
 	},
 	{
 		id: 2,
-		title: "眩耀夜行",
-		artist: "スリーズブーケ",
-		cover: "assets/music/cover/xryx.jpg",
-		url: "assets/music/url/xryx.mp3",
-		duration: 180,
+		title: "D大调卡农",
+		artist: "Johann Pachelbel",
+		cover: "assets/music/cover/D大调卡农.jpg",
+		url: "assets/music/url/D大调卡农.m4a",
+		duration: 330,
 	},
 	{
 		id: 3,
-		title: "春雷の頃",
-		artist: "22/7",
-		cover: "assets/music/cover/cl.jpg",
-		url: "assets/music/url/cl.mp3",
-		duration: 200,
+		title: "Sakura Tears",
+		artist: "Snigellin",
+		cover: "assets/music/cover/Sakura Tears.jpg",
+		url: "assets/music/url/Sakura Tears.m4a",
+		duration: 182,
+	},
+	{
+		id: 4,
+		title: "Mice on Venus",
+		artist: "C418",
+		cover: "assets/music/cover/MC.png",
+		url: "assets/music/url/Mice on Venus.m4a",
+		duration: 281,
+	},
+	{
+		id: 5,
+		title: "Minecraft",
+		artist: "C418",
+		cover: "assets/music/cover/MC.png",
+		url: "assets/music/url/Minecraft.m4a",
+		duration: 254,
+	},
+	{
+		id: 6,
+		title: "Moog City",
+		artist: "C418",
+		cover: "assets/music/cover/MC.png",
+		url: "assets/music/url/Moog City.m4a",
+		duration: 280,
+	},
+	{
+		id: 7,
+		title: "Going Home",
+		artist: "Kenny G",
+		cover: "assets/music/cover/sax.jpg",
+		url: "assets/music/url/回家.m4a",
+		duration: 283,
 	},
 ];
 
@@ -247,7 +279,7 @@ function handleLoadSuccess() {
 	}
 }
 
-function handleLoadError(event: Event) {
+function handleLoadError(_event: Event) {
 	isLoading = false;
 	showErrorMessage(`无法播放 "${currentSong.title}"，正在尝试下一首...`);
 	if (playlist.length > 1) setTimeout(() => nextSong(), 1000);
@@ -326,7 +358,7 @@ function handleAudioEvents() {
 			isPlaying = false;
 		}
 	});
-	audio.addEventListener("error", (event) => {
+	audio.addEventListener("error", (_event) => {
 		isLoading = false;
 	});
 	audio.addEventListener("stalled", () => {});
