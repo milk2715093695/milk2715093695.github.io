@@ -1,11 +1,14 @@
 ---
-title: Android 7.1.1 AVD 安装与激活 Xposed 框架全流程
+title: "Android 7.1.1 AVD 安装与激活 Xposed 框架全流程"
 published: 2025-09-15
 pinned: true
-description: 本文详细介绍如何在 Android Studio AVD（Android 7.1.1）上安装和激活 Xposed 框架，方便后续进行模块开发和逆向分析。
-tags: [Android, Xposed, AVD, 逆向分析]
-category: 教程
+description: "本文详细介绍如何在 Android Studio AVD（Android 7.1.1）上安装和激活 Xposed 框架，方便后续进行模块开发和逆向分析。"
+tags: [Android, Xposed, AVD, 逆向分析, 编程]
+category: "教程"
+licenseName: "MIT"
+author: "Milk"
 draft: false
+date: 2025-09-15
 ---
 
 # Android 7.1.1 AVD 上安装与激活 Xposed 框架
@@ -46,17 +49,19 @@ draft: false
 
 ### 2.1. 打开 Virtual Device Manager
  
-![Virtual Device Manager](/images/blog-images/xposed-install/1.png)
+![Virtual Device Manager](1.png)
 
 ### 2.2. 选择合适的 AVD
 
 Android 7 对应的 API 版本是 24 或者 25，我这里的 Pixel XL 和 Pixel 都是符合要求的，但是 GooglePlay 版本的 AVD 不支持 Root，因此我这里选择了 Pixel XL 作为目标设备。
 
-![Select AVD](/images/blog-images/xposed-install/2.png)
+![Select AVD](2.png)
 
 ### 2.3. 选择合适的 Android API 版本
 
-![Select API](/images/blog-images/xposed-install/3.png)
+![Select API](3.png)
+
+等待下载完成后，你就可以在 Virtual Device Manager 中看到或者打开你创建的 AVD 了。此时，你就有了自己的一个 Android 测试环境了，如果不需要进行 Xposed 开发，那么到此为止就已经可以使用了。
 
 ## 3. 配置 AVD 启动方式
 
@@ -68,7 +73,7 @@ Android 7 对应的 API 版本是 24 或者 25，我这里的 Pixel XL 和 Pixel
 
 平时可以如此在终端中启动：
 ```bash
-cd ~/Library/Android/sdk/emulator   # 视系统而定，总之进入 emulator 所在目录
+cd $ANDROID_SDK_ROOT/sdk/emulator   # 视系统而定，总之进入 emulator 所在目录
 ./emulator -list-avds               # 查看可用的 AVD，如果自己记得住，也可以直接指定 AVD 名称
 ./emulator -avd $AVD_NAME -dns-server 223.5.5.5,223.6.6.6 -writable-system -no-snapshot-load -selinux permissive    # $AVD_NAME 需要替换成你自己的 AVD 名称
 ```
@@ -140,7 +145,9 @@ start_avd() {
 }
 ```
 
-随后启动 AVD，`adb` 就会自动连接到 AVD。
+在如此配置后，`source start_avd.sh` 后，你就可以在终端方便的通过 `start_avd` 启动 AVD 了。
+
+随后启动 AVD，`adb` 就会自动连接到 AVD。此后的操作需要保证全程 AVD 都是启动状态。
 
 ## 4. `adb` 获取 `Root` 并挂载 `/system` 为可写
 
@@ -151,7 +158,7 @@ adb remount
 
 如果目前为止没有错误的话，应该看到如下输出：
 
-![adb root](/images/blog-images/xposed-install/4.png)
+![adb root](4.png)
 
 ## 5. 安装 Xposed Installer
 
@@ -159,7 +166,9 @@ adb remount
 
 安装后，打开 Xposed Installer，应该会看到如下界面：
 
-<img src="/images/blog-images/xposed-install/5.png" alt="Xposed Installer" width="200">
+![安装 Xposed Installer](5.png)
+
+接下来需要进行激活 Xposed 框架。
 
 ## 6. 备份
 
@@ -190,7 +199,7 @@ vim xposed-v89-sdk25-arm64/META-INF/com/google/android/flash-script.sh
 1. 由于我们已经进行过了 `adb remount`，所以不需要再进行 `mount -o remount,rw /system`，当然，理论上如果要进行 `mount -o remount,rw /system` 也是可以的，但是实测会出现一些问题，具体原因我没有深入研究，所以这里直接省略了。
 2. 由于我使用的 AVD 是 arm64 的，因此有一些目录和文件是不存在的，例如不存在 `/system/lib32` 目录，需要进行适当的修改。
 
-![对比实际内容](/images/blog-images/xposed-install/6.png)
+![对比实际内容](6.png)
 
 修改后的 `flash-script.sh` 如下：
 ```bash
@@ -385,7 +394,8 @@ mv META-INF/com/google/android/flash-script.sh ./
 ```
 
 此时使用 `ls` 应该能看到如下结果：
-![ls 结果](/images/blog-images/xposed-install/7.png)
+
+![ls 结果](7.png)
 
 随后将 `xposed-v89-sdk25-arm64` 目录推送到 AVD 中：
 ```bash
@@ -393,10 +403,11 @@ adb push ./ /sdcard/Download/xposed
 ```
 
 进入 `adb shell` 并在 `/sdcard/Download/xposed` 目录下执行 `flash-script.sh`：
-![执行结果](/images/blog-images/xposed-install/8.png)>
+![执行结果](8.png)>
 
 此时打开 `Xposed Installer` 应该能看到如下结果：
-<img src="/images/blog-images/xposed-install/9.png" alt="Xposed Installer" width="200">
+
+![Xposed Installer](9.png)
 
 > 如果这个时候很久都发现动不了，基本上是覆盖了不该覆盖的文件，这个时候只能恢复备份的文件了。
 >
@@ -405,6 +416,7 @@ adb push ./ /sdcard/Download/xposed
 ## 7.4. 重启 AVD
 
 执行 `adb reboot` 重启 AVD，重启后打开 `Xposed Installer` 应该能看到如下结果：
-<img src="/images/blog-images/xposed-install/10.png" alt="Xposed Installer" width="200">
+
+![Xposed Installer](10.png)
 
 如果出现了这个界面，说明 Xposed 框架已经安装成功。
