@@ -199,7 +199,7 @@ if __name__ == "__main__":
 
 运行结果如下：
 
-![Digit frequency of π for first k digits (after first 100 digits)](1.png)
+![Digit frequency of π for first k digits (after first 100 digits)](1.webp)
 
 ### 1.4. 观点四：圆周率无穷无尽是因为目前算力不足
 

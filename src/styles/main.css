@@ -21,6 +21,7 @@
 	src: url("/assets/font/LXGWWenKaiMono-Medium.ttf") format("truetype");
 	font-weight: normal;
 	font-display: swap;
+    unicode-range: U+4E00-9FFF, U+3400-4DBF;
 }
 
 @font-face {
