@@ -49,6 +49,7 @@ date: 2025-09-16
     - [1.4.2. 证明步骤 2：证明圆周率是无理数](#142-证明步骤-2证明圆周率是无理数)
     - [1.4.3. 补充 1：连分数展开的推导](#143-补充-1连分数展开的推导)
 - [2. 关于数学中的反直觉现象](#2-关于数学中的反直觉现象)
+  - [2.1. Borwein 积分](#21-borwein-积分)
 
 ## 1. 热身：关于评论区中的常见观点
 
@@ -337,3 +338,9 @@ $$
 于是，我们得到了 $\tan x$ 的连分数展开式。
 
 ## 2. 关于数学中的反直觉现象
+
+### 2.1. Borwein 积分
+
+这个相关的内容，其实 3blue1brown（[Youtube](https://www.youtube.com/@3blue1brown)、[Bilibili](https://space.bilibili.com/88461692)）已经讲的很明白了，所以我写这部分主要是验证自己的学习情况，详情可以参考这个视频：
+
+<iframe width="100%" height="468" src="//player.bilibili.com/player.html?bvid=BV18e4y1u7BH&p=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" &autoplay=0> </iframe>
