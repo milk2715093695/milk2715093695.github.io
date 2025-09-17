@@ -11,8 +11,6 @@ draft: false
 date: 2025-09-15
 ---
 
-# Android 7.1.1 AVD 上安装与激活 Xposed 框架
-
 在进行 Xposed 模块开发时，我们有时需要对某些应用进行逆向分析。对于加壳应用，常用的方法是利用 Xposed 框架进行动态 Hook。无论加壳逻辑多么复杂，其 DEX 文件最终都会被加载到内存中。因此，我们可以通过 Xposed 提供的 Hook 机制，结合反射调用 `getDex()` 等方法，将内存中的 DEX 文件 dump 出来，从而进行进一步的逆向分析。
 
 > **注意**：由于 Android 8 的 API 可能有所变化，基于这个方法的模块基本上只适用于 Android 7 及以下版本，而过低的安卓版本又会导致目标 APP 的兼容性问题。因此，我们选择在 Android Studio 中创建一个 Android 7.1.1 的 AVD，并在其上安装 Xposed 框架，以方便后续的逆向分析工作。
@@ -21,22 +19,21 @@ date: 2025-09-15
 
 ## 目录
 
-- [Android 7.1.1 AVD 上安装与激活 Xposed 框架](#android-711-avd-上安装与激活-xposed-框架)
-  - [目录](#目录)
-  - [1. 前置准备](#1-前置准备)
-  - [2. 创建 AVD](#2-创建-avd)
-    - [2.1. 打开 Virtual Device Manager](#21-打开-virtual-device-manager)
-    - [2.2. 选择合适的 AVD](#22-选择合适的-avd)
-    - [2.3. 选择合适的 Android API 版本](#23-选择合适的-android-api-版本)
-  - [3. 配置 AVD 启动方式](#3-配置-avd-启动方式)
-  - [4. `adb` 获取 `Root` 并挂载 `/system` 为可写](#4-adb-获取-root-并挂载-system-为可写)
-  - [5. 安装 Xposed Installer](#5-安装-xposed-installer)
-  - [6. 备份](#6-备份)
-  - [7. 刷入 Xposed 框架](#7-刷入-xposed-框架)
-    - [7.1. 解压 Xposed 框架压缩包](#71-解压-xposed-框架压缩包)
-    - [7.2. 查看对比并修改 `flash-script.sh`](#72-查看对比并修改-flash-scriptsh)
-    - [7.3. `push` 到 AVD 并执行](#73-push-到-avd-并执行)
-  - [7.4. 重启 AVD](#74-重启-avd)
+- [目录](#目录)
+- [1. 前置准备](#1-前置准备)
+- [2. 创建 AVD](#2-创建-avd)
+  - [2.1. 打开 Virtual Device Manager](#21-打开-virtual-device-manager)
+  - [2.2. 选择合适的 AVD](#22-选择合适的-avd)
+  - [2.3. 选择合适的 Android API 版本](#23-选择合适的-android-api-版本)
+- [3. 配置 AVD 启动方式](#3-配置-avd-启动方式)
+- [4. `adb` 获取 `Root` 并挂载 `/system` 为可写](#4-adb-获取-root-并挂载-system-为可写)
+- [5. 安装 Xposed Installer](#5-安装-xposed-installer)
+- [6. 备份](#6-备份)
+- [7. 刷入 Xposed 框架](#7-刷入-xposed-框架)
+  - [7.1. 解压 Xposed 框架压缩包](#71-解压-xposed-框架压缩包)
+  - [7.2. 查看对比并修改 `flash-script.sh`](#72-查看对比并修改-flash-scriptsh)
+  - [7.3. `push` 到 AVD 并执行](#73-push-到-avd-并执行)
+- [7.4. 重启 AVD](#74-重启-avd)
 
 ## 1. 前置准备
 
