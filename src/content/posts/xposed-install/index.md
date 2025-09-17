@@ -5,7 +5,7 @@ pinned: true
 description: "本文详细介绍如何在 Android Studio AVD（Android 7.1.1）上安装和激活 Xposed 框架，方便后续进行模块开发和逆向分析。"
 tags: [Android, Xposed, AVD, 逆向分析, 编程]
 category: "教程"
-licenseName: "MIT"
+licenseName: "CC BY-NC-SA 4.0"
 author: "Milk"
 draft: false
 date: 2025-09-15
