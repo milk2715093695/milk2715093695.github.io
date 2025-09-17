@@ -11,8 +11,6 @@ draft: false
 date: 2025-09-16
 ---
 
-# 关于数学的一些有趣讨论
-
 > Let me show you. $\pi$. The ratio of the circumference of a circle to its diameter. And this is just the beginning. It keeps on going. Forever. Without ever repeating. 
 > Which means that contained within this string of decimals is every single other number. Your birth date, combination to your locker, your social security number. It's all in there somewhere. 
 > And if you convert these decimals into letters, you would have every word that ever existed in every possible combination. The first syllable you spoke as a baby, the name of your latest crush, your entire life story from beginning to end. 
@@ -31,22 +29,21 @@ date: 2025-09-16
 
 ## 目录
 
-- [关于数学的一些有趣讨论](#关于数学的一些有趣讨论)
-  - [目录](#目录)
-  - [1. 热身：关于评论区中的常见观点](#1-热身关于评论区中的常见观点)
-    - [1.1. 观点一：因为圆周率是无限不循环小数，所以它会出现所有数字组合](#11-观点一因为圆周率是无限不循环小数所以它会出现所有数字组合)
-      - [1.1.1. 第一种反例](#111-第一种反例)
-      - [1.1.2. 拓展：刘维儿数](#112-拓展刘维儿数)
-      - [1.1.3. 第二种反例](#113-第二种反例)
-    - [1.2. 观点二：根据无限猴子定律，圆周率总会出现所有数字组合](#12-观点二根据无限猴子定律圆周率总会出现所有数字组合)
-    - [1.3. 观点三：圆周率的所有数码的出现频率是均匀的，所以它是一个正规数](#13-观点三圆周率的所有数码的出现频率是均匀的所以它是一个正规数)
-      - [1.3.1. 拓展：Simply Normal Number 与 Normal Number](#131-拓展simply-normal-number-与-normal-number)
-      - [1.3.2. Simply Normal Number 是否必然包含所有数字组合？](#132-simply-normal-number-是否必然包含所有数字组合)
-      - [1.3.3. 圆周率是否是 Simply Normal Number？](#133-圆周率是否是-simply-normal-number)
-    - [1.4. 观点四：圆周率无穷无尽是因为目前算力不足](#14-观点四圆周率无穷无尽是因为目前算力不足)
-      - [1.4.1. 证明步骤 1：证明非零有理数正切值都是无理数](#141-证明步骤-1证明非零有理数正切值都是无理数)
-      - [1.4.2. 证明步骤 2：证明圆周率是无理数](#142-证明步骤-2证明圆周率是无理数)
-      - [1.4.3. 补充 1：连分数展开的推导](#143-补充-1连分数展开的推导)
+- [目录](#目录)
+- [1. 热身：关于评论区中的常见观点](#1-热身关于评论区中的常见观点)
+  - [1.1. 观点一：因为圆周率是无限不循环小数，所以它会出现所有数字组合](#11-观点一因为圆周率是无限不循环小数所以它会出现所有数字组合)
+    - [1.1.1. 第一种反例](#111-第一种反例)
+    - [1.1.2. 拓展：刘维儿数](#112-拓展刘维儿数)
+    - [1.1.3. 第二种反例](#113-第二种反例)
+  - [1.2. 观点二：根据无限猴子定律，圆周率总会出现所有数字组合](#12-观点二根据无限猴子定律圆周率总会出现所有数字组合)
+  - [1.3. 观点三：圆周率的所有数码的出现频率是均匀的，所以它是一个正规数](#13-观点三圆周率的所有数码的出现频率是均匀的所以它是一个正规数)
+    - [1.3.1. 拓展：Simply Normal Number 与 Normal Number](#131-拓展simply-normal-number-与-normal-number)
+    - [1.3.2. Simply Normal Number 是否必然包含所有数字组合？](#132-simply-normal-number-是否必然包含所有数字组合)
+    - [1.3.3. 圆周率是否是 Simply Normal Number？](#133-圆周率是否是-simply-normal-number)
+  - [1.4. 观点四：圆周率无穷无尽是因为目前算力不足](#14-观点四圆周率无穷无尽是因为目前算力不足)
+    - [1.4.1. 证明步骤 1：证明非零有理数正切值都是无理数](#141-证明步骤-1证明非零有理数正切值都是无理数)
+    - [1.4.2. 证明步骤 2：证明圆周率是无理数](#142-证明步骤-2证明圆周率是无理数)
+    - [1.4.3. 补充 1：连分数展开的推导](#143-补充-1连分数展开的推导)
 
 ## 1. 热身：关于评论区中的常见观点
 
