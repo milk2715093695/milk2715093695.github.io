@@ -241,13 +241,13 @@ export const navBarConfig: NavBarConfig = {
 			url: "/content/",
 			icon: "material-symbols:person",
 			children: [
-				LinkPreset.Anime,
-				LinkPreset.Diary,
-				{
-					name: "Gallery",
-					url: "/albums/",
-					icon: "material-symbols:photo-library",
-				},
+				// LinkPreset.Anime,
+				// LinkPreset.Diary,
+				// {
+				// 	name: "Gallery",
+				// 	url: "/albums/",
+				// 	icon: "material-symbols:photo-library",
+				// },
 			],
 		},
 		{
@@ -261,21 +261,21 @@ export const navBarConfig: NavBarConfig = {
 			url: "#",
 			icon: "material-symbols:more-horiz",
 			children: [
-				{
-					name: "Projects",
-					url: "/projects/",
-					icon: "material-symbols:work",
-				},
-				{
-					name: "Skills",
-					url: "/skills/",
-					icon: "material-symbols:psychology",
-				},
-				{
-					name: "Timeline",
-					url: "/timeline/",
-					icon: "material-symbols:timeline",
-				},
+				// {
+				// 	name: "Projects",
+				// 	url: "/projects/",
+				// 	icon: "material-symbols:work",
+				// },
+				// {
+				// 	name: "Skills",
+				// 	url: "/skills/",
+				// 	icon: "material-symbols:psychology",
+				// },
+				// {
+				// 	name: "Timeline",
+				// 	url: "/timeline/",
+				// 	icon: "material-symbols:timeline",
+				// },
 			],
 		},
 	],
