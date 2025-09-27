@@ -4,7 +4,7 @@ published: 2025-09-16
 pinned: false
 description: "之前在 B 站上向别人科普了一些圆周率的知识，顺手整理了一下在各个问题中看到的圆周率的有趣讨论和我的思考，整理成这篇文章。"
 tags: [数学, 圆周率, 讨论]
-category: "数学"
+category: "随笔"
 licenseName: "CC BY-NC-SA 4.0"
 author: "Milk"
 draft: false
