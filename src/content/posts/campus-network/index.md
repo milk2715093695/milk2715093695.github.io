@@ -118,8 +118,14 @@ flowchart LR
   B -.->|Wi-Fi连接| AP
   AP --> GW --> Internet
 
-  classDef local fill:#f3f4f6,stroke:#bbb;
+  classDef local fill:#fff2f0,stroke:#ff8a65;
   class WLAN local;
+
+  linkStyle 0 stroke:red,stroke-width:2px;
+  linkStyle 1 stroke:red,stroke-width:2px;
+  linkStyle 2 stroke:red,stroke-width:2px;
+  linkStyle 3 stroke:red,stroke-width:2px;
+  linkStyle 4 stroke:red,stroke-width:2px;
 ```
 
 然而，校园网或公共 Wi-Fi 场景中，往往会启用 AP 隔离机制。其作用是：
@@ -149,6 +155,12 @@ flowchart LR
 
   classDef isol fill:#fff2f0,stroke:#ff8a65;
   class WLAN isol;
+
+  linkStyle 0 stroke:red,stroke-width:2px;
+  linkStyle 1 stroke:red,stroke-width:2px;
+  linkStyle 2 stroke:red,stroke-width:2px;
+  linkStyle 3 stroke:red,stroke-width:2px;
+  linkStyle 4 stroke:red,stroke-width:2px;
 ```
   
 因此，从实验结果推测，即便电脑和手机处于同一网段，由于 AP 隔离的存在，它们的数据包会被 AP 丢弃或阻断，导致无法直接互通。
@@ -194,6 +206,14 @@ flowchart LR
 
   classDef isol fill:#fff2f0,stroke:#ff8a65;
   class WLAN isol;
+
+  linkStyle 0 stroke:red,stroke-width:2px;
+  linkStyle 1 stroke:red,stroke-width:2px;
+  linkStyle 2 stroke:red,stroke-width:2px;
+  linkStyle 3 stroke:red,stroke-width:2px;
+  linkStyle 4 stroke:red,stroke-width:2px;
+  linkStyle 5 stroke:red,stroke-width:2px;
+  linkStyle 6 stroke:red,stroke-width:2px;  
 ```
 
 #### 1.3.4. 尝试解决
