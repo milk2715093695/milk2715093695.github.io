@@ -134,7 +134,7 @@ Brainfuck 这个名字真的是一点都没起错，我写的时候感觉我的 
 ```
 
 这是一个利用三重循环实现的 `Brainfuck` 编译器，功能是输出 `H`，编译过程中生成的中间表示为：
-``llvm
+```llvm
 ; ModuleID = "brainfuck_compiler"
 target triple = "unknown-unknown-unknown"
 target datalayout = ""
