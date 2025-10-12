@@ -4,7 +4,7 @@ published: 2025-09-26
 pinned: false
 description: "在日常生活中，常常有通过校园网进行局域网通信的需求，但是本校校园网内设备间无法直接正常通信，本文对此进行分析并尝试绕过隔离机制。"
 tags: [网络, 编程, 校园网]
-category: "实验记录"
+category: "实验"
 licenseName: "CC BY-NC-SA 4.0"
 author: "Milk"
 draft: false

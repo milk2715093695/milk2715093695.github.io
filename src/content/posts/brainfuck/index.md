@@ -4,7 +4,7 @@ published: 2025-10-12
 pinned: false
 description: "看到一个非常有趣的编程语言：Brainfuck，它只有 8 种操作，却是图灵完备的。"
 tags: [编程, Brainfuck]
-category: "代码实验"
+category: "实验"
 licenseName: "CC BY-NC-SA 4.0"
 author: "Milk"
 draft: false
