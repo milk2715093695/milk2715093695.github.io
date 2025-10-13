@@ -622,7 +622,7 @@ const umamiConfig = {"enabled":true,"apiKey":"api_PBhutIA9dKwNUBkOuwmPZEjGU73Sct
 </ul><p>教学楼的网段为 172.17.0.0/18，子网掩码为 255.255.192.0。进行与运算可知：</p><ul>
 <li>172.17.26.206 &#x26; 255.255.192.0 = 172.17.0.0</li>
 <li>172.17.46.229 &#x26; 255.255.192.0 = 172.17.0.0</li>
-</ul><p>因此两台设备处于同一子网内，理论上可以直接通过 IP 地址进行通信。</p></section><section><h4 id="132-初步测试ping">1.3.2. 初步测试：ping<a class="anchor" href="#132-初步测试ping"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h4><p>在电脑上执行 <code>ping 172.17.46.229</code>，发现无法连通：</p><p><img alt="ping" loading="lazy" decoding="async" fetchpriority="auto" width="2880" height="1800" src="/_astro/3.jVDKNQ_2_Z1eCu0t.webp" ></p><p>在手机上执行 <code>ping 172.17.26.206</code>，同样无法连通：</p><p><img alt="ping" loading="lazy" decoding="async" fetchpriority="auto" width="1272" height="1576" src="/_astro/4.BvI65dT2_ZzvwGo.webp" ></p><blockquote class="admonition bdm-note"><span class="bdm-title">NOTE</span><p>这里本来想再在两边同时抓包进行测试的，但是当时忘记了，后续的实验环节会进行抓包测试。</p></blockquote></section><section><h4 id="133-推测">1.3.3. 推测<a class="anchor" href="#133-推测"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h4><p>根据上述实验结果与一些资料的收集，推测校园网可能通过 <strong>AP（Access Point，接入点）隔离</strong>机制来限制。</p><p>在无线网络中，AP 通常起到把无线终端接入有线网络的作用，同时也可以负责数据的收发、转发。</p><p>在默认情况下，如果多个终端连接到同一个 AP，它们之间可以直接通过二层转发进行通信。例如，两台接入同一 Wi-Fi 的电脑之间，可以不经过外网网关直接互相传输文件。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-dw7aks"><div class="mermaid" data-mermaid-code="flowchart LR
+</ul><p>因此两台设备处于同一子网内，理论上可以直接通过 IP 地址进行通信。</p></section><section><h4 id="132-初步测试ping">1.3.2. 初步测试：ping<a class="anchor" href="#132-初步测试ping"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h4><p>在电脑上执行 <code>ping 172.17.46.229</code>，发现无法连通：</p><p><img alt="ping" loading="lazy" decoding="async" fetchpriority="auto" width="2880" height="1800" src="/_astro/3.jVDKNQ_2_Z1eCu0t.webp" ></p><p>在手机上执行 <code>ping 172.17.26.206</code>，同样无法连通：</p><p><img alt="ping" loading="lazy" decoding="async" fetchpriority="auto" width="1272" height="1576" src="/_astro/4.BvI65dT2_ZzvwGo.webp" ></p><blockquote class="admonition bdm-note"><span class="bdm-title">NOTE</span><p>这里本来想再在两边同时抓包进行测试的，但是当时忘记了，后续的实验环节会进行抓包测试。</p></blockquote></section><section><h4 id="133-推测">1.3.3. 推测<a class="anchor" href="#133-推测"><span class="anchor-icon" data-pagefind-ignore="">#</span></a></h4><p>根据上述实验结果与一些资料的收集，推测校园网可能通过 <strong>AP（Access Point，接入点）隔离</strong>机制来限制。</p><p>在无线网络中，AP 通常起到把无线终端接入有线网络的作用，同时也可以负责数据的收发、转发。</p><p>在默认情况下，如果多个终端连接到同一个 AP，它们之间可以直接通过二层转发进行通信。例如，两台接入同一 Wi-Fi 的电脑之间，可以不经过外网网关直接互相传输文件。</p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-6c7p48"><div class="mermaid" data-mermaid-code="flowchart LR
   subgraph WLAN[无线局域网]
     direction TB
     A[设备 A<br/>（电脑）]
@@ -1020,7 +1020,7 @@ const umamiConfig = {"enabled":true,"apiKey":"api_PBhutIA9dKwNUBkOuwmPZEjGU73Sct
 <li>防止恶意用户在局域网内进行端口扫描、中间人攻击等行为。</li>
 <li>防止被感染的设备在局域网内传播病毒。</li>
 <li>减少不必要的局域网通信，提高管理员对网络流量的监控与控制能力。</li>
-</ul><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-pklgel"><div class="mermaid" data-mermaid-code="flowchart LR
+</ul><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-rzcb3e"><div class="mermaid" data-mermaid-code="flowchart LR
   subgraph WLAN[无线接入网]
     direction TB
     A[设备 A<br/>（电脑）]
@@ -1416,7 +1416,7 @@ const umamiConfig = {"enabled":true,"apiKey":"api_PBhutIA9dKwNUBkOuwmPZEjGU73Sct
 		initialize();
 	}
 })();
-</script></div><p>因此，从实验结果推测，即便电脑和手机处于同一网段，由于 AP 隔离的存在，它们的数据包会被 AP 丢弃或阻断，导致无法直接互通。</p><p>换句话说，只要流量从二层变成三层（跨网段）路由，AP 隔离就失效，因为 AP 不会阻止正常路由转发。</p><p>如果可以让请求包沿着 <code>A -> AP -> GW -> AP -> B</code>，响应包沿着 <code>B -> AP -> GW -> AP -> A</code> 路径传输，那么就能实现设备间的通信。</p><p><a href="https://blog.csdn.net/qq_25177949/article/details/143834903">参考文章 1：Windows 下 AP 隔离的解决方案</a></p><p><a href="https://www.cnblogs.com/wangbingbing/p/17931315.html">参考文章 2：Linux 下 AP 隔离的解决方案</a></p><p><spoiler>那本文算不算弥补了没有 macOS 和 Android 的 AP 隔离解决方案呢？<del>好吧其实和 Linux 基本上一样</del></spoiler></p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-hhr42e"><div class="mermaid" data-mermaid-code="flowchart LR
+</script></div><p>因此，从实验结果推测，即便电脑和手机处于同一网段，由于 AP 隔离的存在，它们的数据包会被 AP 丢弃或阻断，导致无法直接互通。</p><p>换句话说，只要流量从二层变成三层（跨网段）路由，AP 隔离就失效，因为 AP 不会阻止正常路由转发。</p><p>如果可以让请求包沿着 <code>A -> AP -> GW -> AP -> B</code>，响应包沿着 <code>B -> AP -> GW -> AP -> A</code> 路径传输，那么就能实现设备间的通信。</p><p><a href="https://blog.csdn.net/qq_25177949/article/details/143834903">参考文章 1：Windows 下 AP 隔离的解决方案</a></p><p><a href="https://www.cnblogs.com/wangbingbing/p/17931315.html">参考文章 2：Linux 下 AP 隔离的解决方案</a></p><p><spoiler>那本文算不算弥补了没有 macOS 和 Android 的 AP 隔离解决方案呢？<del>好吧其实和 Linux 基本上一样</del></spoiler></p><div class="mermaid-diagram-container"><div class="mermaid-wrapper" id="mermaid-yniv4r"><div class="mermaid" data-mermaid-code="flowchart LR
   subgraph WLAN[无线接入网]
     direction TB
     A[设备 A<br/>（电脑）]
