@@ -1,14 +1,13 @@
 ---
-title: "Android 7.1.1 AVD 安装与激活 Xposed 框架全流程"
+title: Android 7.1.1 AVD 安装与激活 Xposed 框架全流程
 published: 2025-09-15
 pinned: true
-description: "本文详细介绍如何在 Android Studio AVD（Android 7.1.1）上安装和激活 Xposed 框架，方便后续进行模块开发和逆向分析。"
+description: 本文详细介绍如何在 Android Studio AVD（Android 7.1.1）上安装和激活 Xposed 框架，方便后续进行模块开发和逆向分析。
 tags: [Android, Xposed, AVD, 逆向分析, 编程]
-category: "教程"
+category: 教程
 licenseName: "CC BY-NC-SA 4.0"
-author: "Milk"
+author: Milk
 draft: false
-date: 2025-09-15
 ---
 
 在进行 Xposed 模块开发时，我们有时需要对某些应用进行逆向分析。对于加壳应用，常用的方法是利用 Xposed 框架进行动态 Hook。无论加壳逻辑多么复杂，其 DEX 文件最终都会被加载到内存中。因此，我们可以通过 Xposed 提供的 Hook 机制，结合反射调用 `getDex()` 等方法，将内存中的 DEX 文件 dump 出来，从而进行进一步的逆向分析。

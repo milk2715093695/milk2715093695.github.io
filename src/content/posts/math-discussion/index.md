@@ -1,14 +1,13 @@
 ---
-title: "关于数学的一些有趣讨论（一：圆周率）"
+title: 关于数学的一些有趣讨论（一：圆周率）
 published: 2025-09-16
 pinned: false
-description: "之前在 B 站上向别人科普了一些圆周率的知识，顺手整理了一下在各个问题中看到的圆周率的有趣讨论和我的思考，整理成这篇文章。"
+description: 之前在 B 站上向别人科普了一些圆周率的知识，顺手整理了一下在各个问题中看到的圆周率的有趣讨论和我的思考，整理成这篇文章。
 tags: [数学, 圆周率, 讨论]
-category: "随笔"
+category: 随笔
 licenseName: "CC BY-NC-SA 4.0"
-author: "Milk"
+author: Milk
 draft: false
-date: 2025-09-16
 ---
 
 > Let me show you. $\pi$. The ratio of the circumference of a circle to its diameter. And this is just the beginning. It keeps on going. Forever. Without ever repeating. 
