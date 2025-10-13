@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /_astro/
+
+Sitemap: https://milk2715093695.github.io/sitemap-index.xml

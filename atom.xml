@@ -1,0 +1,1099 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Milk 的博客</title>
+  <subtitle>关于数学、编程与生活的思考</subtitle>
+  <link href="https://milk2715093695.github.io/" rel="alternate" type="text/html"/>
+  <link href="https://milk2715093695.github.io/atom.xml" rel="self" type="application/atom+xml"/>
+  <id>https://milk2715093695.github.io/</id>
+  <updated>2025-10-13T11:50:41.316Z</updated>
+  <language>zh_CN</language>
+  <entry>
+    <title>Android 7.1.1 AVD 安装与激活 Xposed 框架全流程</title>
+    <link href="https://milk2715093695.github.io/posts/xposed-install/" rel="alternate" type="text/html"/>
+    <id>https://milk2715093695.github.io/posts/xposed-install/</id>
+    <published>2025-09-15T00:00:00.000Z</published>
+    <updated>2025-09-15T00:00:00.000Z</updated>
+    <summary>本文详细介绍如何在 Android Studio AVD（Android 7.1.1）上安装和激活 Xposed 框架，方便后续进行模块开发和逆向分析。</summary>
+    <content type="html"><![CDATA[<p>在进行 Xposed 模块开发时，我们有时需要对某些应用进行逆向分析。对于加壳应用，常用的方法是利用 Xposed 框架进行动态 Hook。无论加壳逻辑多么复杂，其 DEX 文件最终都会被加载到内存中。因此，我们可以通过 Xposed 提供的 Hook 机制，结合反射调用 <code>getDex()</code> 等方法，将内存中的 DEX 文件 dump 出来，从而进行进一步的逆向分析。</p>
+<p>:::important
+<strong>注意</strong>：由于 Android 8 的 API 可能有所变化，基于这个方法的模块基本上只适用于 Android 7 及以下版本，而过低的安卓版本又会导致目标 APP 的兼容性问题。因此，我们选择在 Android Studio 中创建一个 Android 7.1.1 的 AVD，并在其上安装 Xposed 框架，以方便后续的逆向分析工作。
+:::</p>
+<p>:::tip
+<strong>如果没有特别提及，所有终端命令都是在宿主机上执行，如果有需要在 <code>adb shell</code> 中执行的会特别指出。</strong>
+:::</p>
+<h2>目录</h2>
+<ul>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#1-%E5%89%8D%E7%BD%AE%E5%87%86%E5%A4%87">1. 前置准备</a></li>
+<li><a href="#2-%E5%88%9B%E5%BB%BA-avd">2. 创建 AVD</a>
+<ul>
+<li><a href="#21-%E6%89%93%E5%BC%80-virtual-device-manager">2.1. 打开 Virtual Device Manager</a></li>
+<li><a href="#22-%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84-avd">2.2. 选择合适的 AVD</a></li>
+<li><a href="#23-%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84-android-api-%E7%89%88%E6%9C%AC">2.3. 选择合适的 Android API 版本</a></li>
+</ul>
+</li>
+<li><a href="#3-%E9%85%8D%E7%BD%AE-avd-%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F">3. 配置 AVD 启动方式</a></li>
+<li><a href="#4-adb-%E8%8E%B7%E5%8F%96-root-%E5%B9%B6%E6%8C%82%E8%BD%BD-system-%E4%B8%BA%E5%8F%AF%E5%86%99">4. <code>adb</code> 获取 <code>Root</code> 并挂载 <code>/system</code> 为可写</a></li>
+<li><a href="#5-%E5%AE%89%E8%A3%85-xposed-installer">5. 安装 Xposed Installer</a></li>
+<li><a href="#6-%E5%A4%87%E4%BB%BD">6. 备份</a></li>
+<li><a href="#7-%E5%88%B7%E5%85%A5-xposed-%E6%A1%86%E6%9E%B6">7. 刷入 Xposed 框架</a>
+<ul>
+<li><a href="#71-%E8%A7%A3%E5%8E%8B-xposed-%E6%A1%86%E6%9E%B6%E5%8E%8B%E7%BC%A9%E5%8C%85">7.1. 解压 Xposed 框架压缩包</a></li>
+<li><a href="#72-%E6%9F%A5%E7%9C%8B%E5%AF%B9%E6%AF%94%E5%B9%B6%E4%BF%AE%E6%94%B9-flash-scriptsh">7.2. 查看对比并修改 <code>flash-script.sh</code></a></li>
+<li><a href="#73-push-%E5%88%B0-avd-%E5%B9%B6%E6%89%A7%E8%A1%8C">7.3. <code>push</code> 到 AVD 并执行</a></li>
+</ul>
+</li>
+<li><a href="#74-%E9%87%8D%E5%90%AF-avd">7.4. 重启 AVD</a></li>
+</ul>
+<h2>1. 前置准备</h2>
+<ul>
+<li>Android Studio 及 SDK 环境</li>
+<li><code>adb</code> 等必要工具（通常随 SDK 自带，无需额外配置）</li>
+<li><a href="https://archive.org/download/xposed-sdk25">Xposed 框架</a></li>
+<li><a href="https://xdaforums.com/t/official-xposed-for-lollipop-marshmallow-nougat-oreo-v90-beta3-2018-01-29.3034811">Xposed Installer APK</a></li>
+</ul>
+<h2>2. 创建 AVD</h2>
+<h3>2.1. 打开 Virtual Device Manager</h3>
+<p><img src="https://milk2715093695.github.io/_astro/1.HLLhQsJZ_ZT4uE.webp" alt="Virtual Device Manager" /></p>
+<h3>2.2. 选择合适的 AVD</h3>
+<p>Android 7 对应的 API 版本是 24 或者 25，我这里的 Pixel XL 和 Pixel 都是符合要求的，但是 GooglePlay 版本的 AVD 不支持 Root，因此我这里选择了 Pixel XL 作为目标设备。</p>
+<p><img src="https://milk2715093695.github.io/_astro/2.QrTb0G6S_2pjw3k.webp" alt="Select AVD" /></p>
+<h3>2.3. 选择合适的 Android API 版本</h3>
+<p><img src="https://milk2715093695.github.io/_astro/3.CQkrYKA7_nBOse.webp" alt="Select API" /></p>
+<p>等待下载完成后，你就可以在 Virtual Device Manager 中看到或者打开你创建的 AVD 了。此时，你就有了自己的一个 Android 测试环境了，如果不需要进行 Xposed 开发，那么到此为止就已经可以使用了。</p>
+<h2>3. 配置 AVD 启动方式</h2>
+<p>启动时需要以下几个注意事项：</p>
+<ol>
+<li>DNS 需要修改为国内可用的 DNS，否则会导致网络问题。</li>
+<li>启动时需要启用 <code>-writable-system</code> 参数，否则无法修改 <code>/system</code> 分区。</li>
+<li>启动时需要启用 <code>-no-snapshot-load</code> 参数，否则软重启可能会让刷入 Xposed 变得更麻烦。</li>
+<li>启动时需要启用 <code>-selinux permissive</code> 参数，否则可能会导致 SELinux 安全问题。</li>
+</ol>
+<p>平时可以如此在终端中启动：</p>
+<pre><code>cd $ANDROID_SDK_ROOT/sdk/emulator   # 视系统而定，总之进入 emulator 所在目录
+./emulator -list-avds               # 查看可用的 AVD，如果自己记得住，也可以直接指定 AVD 名称
+./emulator -avd $AVD_NAME -dns-server 223.5.5.5,223.6.6.6 -writable-system -no-snapshot-load -selinux permissive    # $AVD_NAME 需要替换成你自己的 AVD 名称
+</code></pre>
+<p>我平时习惯用命令行启动，因此写了一个 <code>start_avd.sh</code>，在加载 <code>~/.zshrc</code> 的时候会一同加载，以下提供代码可供参考：</p>
+<pre><code># 用于增加 PATH 同时防止环境变量重复添加的函数
+add_to_path() {
+    for dir in "$@"; do
+        if [[ -d "$dir" ]]; then
+            if [[ ":$PATH:" != *":$dir:"* ]]; then
+                export PATH="$dir:$PATH"
+            echo "目录 $dir 被添加到 PATH 中"
+            else
+                echo "警告：目录 $dir 已经在 PATH 中"
+            fi
+        else 
+            echo "错误：目录 $dir 不存在"
+        fi
+    done
+}
+
+# =======================
+# Android SDK 路径
+# =======================
+export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk   # 这个目录需要根据你自己的配置微调
+add_to_path "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin"
+add_to_path "$ANDROID_SDK_ROOT/platform-tools"
+add_to_path "$ANDROID_SDK_ROOT/emulator"
+
+# =======================
+# AVD 配置脚本
+# =======================
+
+# 设置默认 DNS
+export ANDROID_DNS="223.5.5.5,223.6.6.6"
+
+# 启动 AVD 的函数
+start_avd() {
+    local avds
+    avds=$(emulator -list-avds)
+
+    if [ -z "$avds" ]; then
+        echo "未找到任何 AVD，请先创建。"
+        return 1
+    fi
+
+    echo "可用的 AVD："
+    local choices=()
+    local i=1
+    while IFS= read -r avd; do
+        echo "[$i] $avd"
+        choices[$i]="$avd"   # 用编号作为数组下标，避免错位
+        ((i++))
+    done &lt;&lt;&lt; "$avds"
+
+    echo -n "请输入要启动的编号："
+    read -r choice
+
+    if [[ "$choice" =~ ^[0-9]+$ ]] &amp;&amp; [ -n "${choices[$choice]}" ]; then
+        local selected="${choices[$choice]}"
+        echo "正在启动 AVD: $selected ..."
+        emulator -avd "$selected" -dns-server "$ANDROID_DNS" -writable-system -no-snapshot-load -selinux permissive
+    else
+        echo "无效选择。"
+        return 1
+    fi
+}
+</code></pre>
+<p>在如此配置后，<code>source start_avd.sh</code> 后，你就可以在终端方便的通过 <code>start_avd</code> 启动 AVD 了。</p>
+<p>随后启动 AVD，<code>adb</code> 就会自动连接到 AVD。此后的操作需要保证全程 AVD 都是启动状态。</p>
+<h2>4. <code>adb</code> 获取 <code>Root</code> 并挂载 <code>/system</code> 为可写</h2>
+<pre><code>adb root
+adb remount
+</code></pre>
+<p>如果目前为止没有错误的话，应该看到如下输出：</p>
+<p><img src="https://milk2715093695.github.io/_astro/4.B_nWlZea_2i8jhk.webp" alt="adb root" /></p>
+<h2>5. 安装 Xposed Installer</h2>
+<p>首先，使用 <code>adb install XposedInstaller_3.1.5.apk</code> 安装 Xposed Installer。</p>
+<p>安装后，打开 Xposed Installer，应该会看到如下界面：</p>
+<p><img src="https://milk2715093695.github.io/_astro/5.QBnwD-BP_baNce.webp" alt="安装 Xposed Installer" /></p>
+<p>接下来需要进行激活 Xposed 框架。</p>
+<h2>6. 备份</h2>
+<p>:::important
+备份非常重要！因为一不小心就可能覆盖错了文件导致 AVD 完全打不开
+:::</p>
+<pre><code>cd ~/.android/avd           # 视安装位置而定
+zip -r backup.zip $AVD_NAME # AVD_NAME 替换成自己的 AVD 名字
+</code></pre>
+<h2>7. 刷入 Xposed 框架</h2>
+<h3>7.1. 解压 Xposed 框架压缩包</h3>
+<pre><code>cd ~/Downloads/逆向     # 视你的 Xposed 框架下载目录而定
+unzip xposed-v89-sdk25-arm64.zip -d xposed-v89-sdk25-arm64  # 需要看自己的系统和架构应该安装什么版本的
+</code></pre>
+<h3>7.2. 查看对比并修改 <code>flash-script.sh</code></h3>
+<p>使用：</p>
+<pre><code>vim xposed-v89-sdk25-arm64/META-INF/com/google/android/flash-script.sh
+</code></pre>
+<p>查看 <code>flash-script.sh</code> 的内容并对比自己的 AVD 实际内容后，大概需要进行以下几个修改：</p>
+<ol>
+<li>由于我们已经进行过了 <code>adb remount</code>，所以不需要再进行 <code>mount -o remount,rw /system</code>，当然，理论上如果要进行 <code>mount -o remount,rw /system</code> 也是可以的，但是实测会出现一些问题，具体原因我没有深入研究，所以这里直接省略了。</li>
+<li>由于我使用的 AVD 是 arm64 的，因此有一些目录和文件是不存在的，例如不存在 <code>/system/lib32</code> 目录，需要进行适当的修改。</li>
+</ol>
+<p><img src="https://milk2715093695.github.io/_astro/6.Ck3j6su__ZUmQmi.webp" alt="对比实际内容" /></p>
+<p>修改后的 <code>flash-script.sh</code> 如下：</p>
+<pre><code>##########################################################################################
+#
+# Xposed framework installer zip.
+#
+# This script installs the Xposed framework files to the system partition.
+# The Xposed Installer app is needed as well to manage the installed modules.
+#
+##########################################################################################
+
+grep_prop() {
+  REGEX="s/^$1=//p"
+  shift
+  FILES=$@
+  if [ -z "$FILES" ]; then
+    FILES='/system/build.prop'
+  fi
+  cat $FILES 2&gt;/dev/null | sed -n $REGEX | head -n 1
+}
+
+android_version() {
+  case $1 in
+    15) echo '4.0 / SDK'$1;;
+    16) echo '4.1 / SDK'$1;;
+    17) echo '4.2 / SDK'$1;;
+    18) echo '4.3 / SDK'$1;;
+    19) echo '4.4 / SDK'$1;;
+    21) echo '5.0 / SDK'$1;;
+    22) echo '5.1 / SDK'$1;;
+    23) echo '6.0 / SDK'$1;;
+    24) echo '7.0 / SDK'$1;;
+    25) echo '7.1 / SDK'$1;;
+    26) echo '8.0 / SDK'$1;;
+    27) echo '8.1 / SDK'$1;;
+    *)  echo 'SDK'$1;;
+  esac
+}
+
+cp_perm() {
+  cp -f $1 $2 || exit 1
+  set_perm $2 $3 $4 $5 $6
+}
+
+set_perm() {
+  chown $2:$3 $1 || exit 1
+  chmod $4 $1 || exit 1
+  if [ "$5" ]; then
+    chcon $5 $1 2&gt;/dev/null
+  else
+    chcon 'u:object_r:system_file:s0' $1 2&gt;/dev/null
+  fi
+}
+
+install_nobackup() {
+  cp_perm ./$1 $1 $2 $3 $4 $5
+}
+
+install_and_link() {
+  TARGET=$1
+  XPOSED="${1}_xposed"
+  BACKUP="${1}_original"
+  if [ ! -f ./$XPOSED ]; then
+    return
+  fi
+  cp_perm ./$XPOSED $XPOSED $2 $3 $4 $5
+  if [ ! -f $BACKUP ]; then
+    mv $TARGET $BACKUP || exit 1
+    ln -s $XPOSED $TARGET || exit 1
+    chcon -h 'u:object_r:system_file:s0' $TARGET 2&gt;/dev/null
+  fi
+}
+
+install_overwrite() {
+  TARGET=$1
+  if [ ! -f ./$TARGET ]; then
+    return
+  fi
+  BACKUP="${1}.orig"
+  NO_ORIG="${1}.no_orig"
+  if [ ! -f $TARGET ]; then
+    touch $NO_ORIG || exit 1
+    set_perm $NO_ORIG 0 0 600
+  elif [ -f $BACKUP ]; then
+    rm -f $TARGET
+    gzip $BACKUP || exit 1
+    set_perm "${BACKUP}.gz" 0 0 600
+  elif [ ! -f "${BACKUP}.gz" -a ! -f $NO_ORIG ]; then
+    mv $TARGET $BACKUP || exit 1
+    gzip $BACKUP || exit 1
+    set_perm "${BACKUP}.gz" 0 0 600
+  fi
+  cp_perm ./$TARGET $TARGET $2 $3 $4 $5
+}
+
+##########################################################################################
+
+echo "******************************"
+echo "Xposed framework installer zip"
+echo "******************************"
+
+if [ ! -f "system/xposed.prop" ]; then
+  echo "! Failed: Extracted file system/xposed.prop not found!"
+  exit 1
+fi
+
+echo "- Checking environment"
+API=$(grep_prop ro.build.version.sdk)
+APINAME=$(android_version $API)
+ABI=$(grep_prop ro.product.cpu.abi | cut -c-3)
+ABI2=$(grep_prop ro.product.cpu.abi2 | cut -c-3)
+ABILONG=$(grep_prop ro.product.cpu.abi)
+
+XVERSION=$(grep_prop version system/xposed.prop)
+XARCH=$(grep_prop arch system/xposed.prop)
+XMINSDK=$(grep_prop minsdk system/xposed.prop)
+XMAXSDK=$(grep_prop maxsdk system/xposed.prop)
+
+XEXPECTEDSDK=$(android_version $XMINSDK)
+if [ "$XMINSDK" != "$XMAXSDK" ]; then
+  XEXPECTEDSDK=$XEXPECTEDSDK' - '$(android_version $XMAXSDK)
+fi
+
+ARCH=arm
+IS64BIT=
+if [ "$ABI" = "x86" ]; then ARCH=x86; fi;
+if [ "$ABI2" = "x86" ]; then ARCH=x86; fi;
+if [ "$API" -ge "21" ]; then
+  if [ "$ABILONG" = "arm64-v8a" ]; then ARCH=arm64; IS64BIT=1; fi;
+  if [ "$ABILONG" = "x86_64" ]; then ARCH=x64; IS64BIT=1; fi;
+fi
+
+# echo "DBG [$API] [$ABI] [$ABI2] [$ABILONG] [$ARCH] [$XARCH] [$XMINSDK] [$XMAXSDK] [$XVERSION]"
+
+echo "  Xposed version: $XVERSION"
+
+XVALID=
+if [ "$ARCH" = "$XARCH" ]; then
+  if [ "$API" -ge "$XMINSDK" ]; then
+    if [ "$API" -le "$XMAXSDK" ]; then
+      XVALID=1
+    else
+      echo "! Wrong Android version: $APINAME"
+      echo "! This file is for: $XEXPECTEDSDK"
+    fi
+  else
+    echo "! Wrong Android version: $APINAME"
+    echo "! This file is for: $XEXPECTEDSDK"
+  fi
+else
+  echo "! Wrong platform: $ARCH"
+  echo "! This file is for: $XARCH"
+fi
+
+if [ -z $XVALID ]; then
+  echo "! Please download the correct package"
+  echo "! for your platform/ROM!"
+  exit 1
+fi
+
+echo "- Placing files"
+install_nobackup /system/xposed.prop                      0    0 0644
+install_nobackup /system/framework/XposedBridge.jar       0    0 0644
+
+install_overwrite /system/bin/dex2oat                     0 2000 0755 u:object_r:dex2oat_exec:s0
+install_overwrite /system/bin/oatdump                     0 2000 0755
+install_overwrite /system/bin/patchoat                    0 2000 0755 u:object_r:dex2oat_exec:s0
+
+if [ $IS64BIT ]; then
+  install_and_link  /system/bin/app_process64             0 2000 0755 u:object_r:zygote_exec:s0
+  install_overwrite /system/lib64/libart.so               0    0 0644
+  install_overwrite /system/lib64/libart-compiler.so      0    0 0644
+  install_overwrite /system/lib64/libart-disassembler.so  0    0 0644
+  install_overwrite /system/lib64/libsigchain.so          0    0 0644
+  install_nobackup  /system/lib64/libxposed_art.so        0    0 0644
+fi
+
+if [ "$API" -ge "22" ]; then
+  find /system /vendor -type f -name '*.odex.gz' 2&gt;/dev/null | while read f; do mv "$f" "$f.xposed"; done
+fi
+
+echo "- Done"
+exit 0
+</code></pre>
+<h3>7.3. <code>push</code> 到 AVD 并执行</h3>
+<p>首先把 <code>flash-script.sh</code> 拷贝到 <code>xposed-v89-sdk25-arm64</code> 目录。</p>
+<pre><code>mv META-INF/com/google/android/flash-script.sh ./
+</code></pre>
+<p>此时使用 <code>ls</code> 应该能看到如下结果：</p>
+<p><img src="https://milk2715093695.github.io/_astro/7.yfzpxbN0_2mjkRy.webp" alt="ls 结果" /></p>
+<p>随后将 <code>xposed-v89-sdk25-arm64</code> 目录推送到 AVD 中：</p>
+<pre><code>adb push ./ /sdcard/Download/xposed
+</code></pre>
+<p>进入 <code>adb shell</code> 并在 <code>/sdcard/Download/xposed</code> 目录下执行 <code>flash-script.sh</code>：
+<img src="https://milk2715093695.github.io/_astro/8.CSFUQ_CP_ZIoIgW.webp" alt="执行结果" />&gt;</p>
+<p>此时打开 <code>Xposed Installer</code> 应该能看到如下结果：</p>
+<p><img src="https://milk2715093695.github.io/_astro/9.Cx6tqTUY_12Vw0n.webp" alt="Xposed Installer" /></p>
+<blockquote>
+<p>如果这个时候很久都发现动不了，基本上是覆盖了不该覆盖的文件，这个时候只能恢复备份的文件了。</p>
+<p>此时按理说应该在 <code>adb shell</code> 中继续执行 <code>sync</code> 以确保文件同步到 AVD 中，但实际操作中并未发现需要执行 <code>sync</code>，不过建议还是执行一下。</p>
+</blockquote>
+<h2>7.4. 重启 AVD</h2>
+<p>执行 <code>adb reboot</code> 重启 AVD，重启后打开 <code>Xposed Installer</code> 应该能看到如下结果：</p>
+<p><img src="https://milk2715093695.github.io/_astro/10.BlwhKJvY_1VC5dQ.webp" alt="Xposed Installer" /></p>
+<p>如果出现了这个界面，说明 Xposed 框架已经安装成功。</p>
+]]></content>
+    <author>
+      <name>Milk</name>
+    </author>
+    <category term="教程"></category>
+  </entry>
+  <entry>
+    <title>浅谈 Brainfuck</title>
+    <link href="https://milk2715093695.github.io/posts/brainfuck/" rel="alternate" type="text/html"/>
+    <id>https://milk2715093695.github.io/posts/brainfuck/</id>
+    <published>2025-10-12T00:00:00.000Z</published>
+    <updated>2025-10-12T00:00:00.000Z</updated>
+    <summary>看到一个非常有趣的编程语言：Brainfuck，它只有 8 种操作，却是图灵完备的。</summary>
+    <content type="html"><![CDATA[<p>:::tip
+Brainfuck 这个名字真的是一点都没起错，我写的时候感觉我的 Brain 正在被 F*ck。
+:::</p>
+<h2>目录</h2>
+<ul>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#1-brainfuck-%E4%BB%8B%E7%BB%8D">1. Brainfuck 介绍</a>
+<ul>
+<li><a href="#11-brainfuck-%E7%9A%84-8-%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%AC%A6">1.1. Brainfuck 的 8 个操作符</a></li>
+<li><a href="#12-brainfuck-%E4%B8%8E%E5%9B%BE%E7%81%B5%E6%9C%BA">1.2. Brainfuck 与图灵机</a></li>
+<li><a href="#13-%E5%87%A0%E4%B8%AA%E4%BE%8B%E5%AD%90">1.3. 几个例子</a>
+<ul>
+<li><a href="#131-%E9%80%9A%E8%BF%87%E5%BE%AA%E7%8E%AF%E5%AE%9E%E7%8E%B0-uint8-%E4%B9%98%E6%B3%95">1.3.1. 通过循环实现 uint8 乘法</a></li>
+<li><a href="#132-hello-world">1.3.2. Hello World</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-brainfuck-%E7%BC%96%E8%AF%91%E5%99%A8">2. Brainfuck 编译器</a>
+<ul>
+<li><a href="#21-%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA">2.1. 效果展示</a></li>
+</ul>
+</li>
+</ul>
+<h2>1. Brainfuck 介绍</h2>
+<p><code>Brainfuck</code> 是一种极小化的编程语言，由 Urban Müller 在 1993 年设计。它的特点非常独特：整个语言只有 8 个操作符，但却是 图灵完备（Turing Complete） 的，也就是说，它理论上可以完成任何计算任务。</p>
+<h3>1.1. Brainfuck 的 8 个操作符</h3>
+<p><code>Brainfuck</code> 假设存在一个无限长的数组（实践中通常选择长度为 30000 的 uint8 数组），以及一个指向数据的指针（实践中初始状态指针通常指向第一个内存地址），然后通过 8 个操作符来操作这个数据。</p>
+<ul>
+<li><code>.</code>：输出当前单元的 ASCII 值</li>
+<li><code>,</code>：从标准输入读取一个字符，并将其存储到当前单元</li>
+<li><code>+</code>：将当前单元的值加一</li>
+<li><code>-</code>：将当前单元的值减一</li>
+<li><code>&gt;</code>：将数据指针向右移动一个单元</li>
+<li><code>&lt;</code>：将数据指针向左移动一个单元</li>
+<li><code>[</code>：如果当前单元的值为零，则跳转到与之匹配的 <code>]</code> 后面的第一个字符</li>
+<li><code>]</code>：如果当前单元的值不为零，则跳转到与之匹配的 <code>[</code> 前面的第一个字符</li>
+</ul>
+<h3>1.2. Brainfuck 与图灵机</h3>
+<p><code>Brainfuck</code> 的假设和操作符设计，很明显是受到了图灵机的启发。图灵机是一种理论计算机模型，由一个无限长的纸带、一个读写头和一个状态寄存器组成。<code>Brainfuck</code> 的数据、指针和操作符，都可以看作是图灵机的对应部分：</p>
+<ol>
+<li>图灵机的无限长纸带，可以看作是 <code>Brainfuck</code> 的无限长的数组。</li>
+<li>图灵机的读写头，可以看作是 <code>Brainfuck</code> 的数据指针。</li>
+<li>图灵机的读写操作，可以看作是 <code>Brainfuck</code> 的 <code>+</code>、<code>-</code>、<code>.</code>、<code>,</code> 操作符。</li>
+<li>图灵机读写头的移动，可以看作是 <code>Brainfuck</code> 的 <code>&gt;</code>、<code>&lt;</code> 操作符。</li>
+<li>图灵机的状态寄存器与控制规则，可以看作是 <code>Brainfuck</code> 的 <code>[</code>、<code>]</code> 操作符，它们提供了条件跳转的功能。</li>
+</ol>
+<p>不难从直觉上感觉到 <code>Brainfuck</code> 是图灵完备的。</p>
+<h3>1.3. 几个例子</h3>
+<p>我先给出不带注释的版本，然后再给出有注释的版本。看到一坨代码不用害怕，仔细看注释，你会发现它其实很简单。</p>
+<p>值得注意的是，因为 <code>Brainfuck</code> 只识别这几种字符，任意其他字符都会被忽略，所以你几乎可以用你习惯的任何语言的注释风格写注释，都可以作为合法的 <code>Brainfuck</code> 代码。（除了 <code>HTML</code> 和 <code>Markdown</code> 的注释）</p>
+<h4>1.3.1. 通过循环实现 uint8 乘法</h4>
+<p>注意：输入输出都是以 ASCII 码的形式进行的，比如输入 1 实际上输入的是 49。</p>
+<pre><code>,&gt;[-]&gt;[-]&gt;,[&lt;+&lt;+&gt;&gt;-]&lt;&lt;&lt;[&gt;&gt;[&lt;+&gt;&gt;+&lt;-]&gt;[&lt;+&gt;-]&lt;&lt;&lt;-]&gt;.
+</code></pre>
+<p>有注释的版本：</p>
+<pre><code>,               # 在第 0 个位置输入乘数 A
+&gt;[-]&gt;[-]&gt;,      # 在第 3 个位置输入乘数 B，顺便清空第 1、2 个位置
+[&lt;+&lt;+&gt;&gt;-]       # 把 B 复制到第 1、2 个位置
+&lt;&lt;&lt;             # 指针回到第 0 个位置
+[               # 以 A 为循环计数器
+    &gt;&gt;          # 指针移动到第 2 个位置
+    [&lt;+&gt;&gt;+&lt;-]   # 循环，在第 1 和 3 个位置加 B
+    &gt;           # 指针移动到第 3 个位置
+    [&lt;+&gt;-]      # 恢复第 2 个位置的值
+    &lt;&lt;&lt;-        # 循环计数器减 1
+]
+&gt;.              # 回到第 1 个位置输出 A*B
+</code></pre>
+<h4>1.3.2. Hello World</h4>
+<pre><code>[-]&gt;[-]&gt;[-]&gt;[-]&gt;[-]&lt;&lt;&lt;&lt;++++++++++[&gt;+++++++&gt;++++++++++&gt;+++&gt;+&lt;&lt;&lt;&lt;-]&gt;++.&gt;+.+++++++..+++.&gt;++.&lt;&lt;+++++++++++++++.&gt;.+++.------.--------&gt;+.&gt;.
+</code></pre>
+<p>有注释的版本（这里用加代替+是为了防止不小心被识别成关键字）：</p>
+<pre><code>[-]             # 清空第 0 个位置
+&gt;[-]&gt;[-]&gt;[-]&gt;[-]    # 清空第 1、2、3、4 个位置
+&lt;&lt;&lt;&lt;            # 指针归位
+++++++++++      # 把第 0 个位置的值设为 10
+[               # 把第 0 个位置作为循环计数器
+    &gt;+++++++    # 第 1 个位置：10*7=70
+    &gt;++++++++++ # 第 2 个位置：10*10=100
+    &gt;+++        # 第 3 个位置：10*3=30
+    &gt;+          # 第 4 个位置：10*1=10
+    &lt;&lt;&lt;&lt;-       # 循环计数器减 1
+]
+&gt;++.            # 输出 70加2=72（H）
+&gt;+.             # 输出 100加1=101（e）  
++++++++..       # 输出 101加7=108（l）两次
++++.            # 输出 108加3=111（o）
+&gt;++.            # 输出 30加2=32（空格）
+&lt;&lt;+++++++++++++++.  #输出 72加15=87（W）
+&gt;.              # 输出 111（o）
++++.            # 输出 111加3=114（r）
+------.         # 输出 114减6=108（l）
+--------.       # 输出 108减8=100（d）
+&gt;+.             # 输出 32加1=33（!）
+&gt;.              # 输出 10（换行）
+</code></pre>
+<h2>2. Brainfuck 编译器</h2>
+<p>听到 <code>Brainfuck</code> 的操作如此简单，相信很多人能几十行代码量写出一个 <code>Brainfuck</code> 解释器。或者一个没有优化而是直接模拟进行操作的编译器。</p>
+<p>但是由于 <code>Brainfuck</code> 本身的特性，一旦对于稍微复杂的逻辑，解释运行的效率就会变的极其低下，而且，为了避免在代码里写上 100 个 <code>+</code>，通常会用循环来实现，那效率就更低了。正所谓“工欲善其事，必先利其器”，所以，我写了一个 <code>Brainfuck</code> 编译器，把 <code>Brainfuck</code> 代码直接编译成二进制文件，其中会经过循环展开、常量传播、死代码消除等优化，以提升运行效率。</p>
+<p>整体解释器的实现通过 <code>Python</code> 的 <code>llvmlite</code> 库实现。目前实现了一个基本的优化，但是由于我还没来得及学习编译原理，所以代码质量可能不够高，因此我可能需要对代码进一步优化后才会公开。</p>
+<h3>2.1. 效果展示</h3>
+<pre><code>[-]&gt;[-]+++[&lt;+++&gt;-]&lt;[&gt;&gt;[-]++++[&lt;++&gt;-]&lt;&lt;-]&gt;.
+</code></pre>
+<p>这是一个利用三重循环实现的 <code>Brainfuck</code> 编译器，功能是输出 <code>H</code>，编译过程中生成的中间表示为：</p>
+<pre><code>; ModuleID = "brainfuck_compiler"
+target triple = "unknown-unknown-unknown"
+target datalayout = ""
+
+define i32 @"main"()
+{
+entry:
+  %"memory" = alloca [30000 x i8]
+  %".2" = getelementptr [30000 x i8], [30000 x i8]* %"memory", i32 0, i32 0
+  %"ptr" = alloca i8*
+  store i8* %".2", i8** %"ptr"
+  call void @"llvm.memset.p0i8.i32"(i8* %".2", i8 0, i32 30000, i1 0)
+  %".5" = load i8*, i8** %"ptr"
+  %".6" = getelementptr i8, i8* %".5", i32 1
+  store i8* %".6", i8** %"ptr"
+  %".8" = load i8*, i8** %"ptr"
+  %".9" = trunc i32 72 to i8
+  store i8 %".9", i8* %".8"
+  %".11" = load i8*, i8** %"ptr"
+  %".12" = getelementptr i8, i8* %".11", i32 1
+  store i8* %".12", i8** %"ptr"
+  %".14" = load i8*, i8** %"ptr"
+  %".15" = trunc i32 0 to i8
+  store i8 %".15", i8* %".14"
+  %".17" = load i8*, i8** %"ptr"
+  %".18" = getelementptr i8, i8* %".17", i32 -2
+  store i8* %".18", i8** %"ptr"
+  %".20" = load i8*, i8** %"ptr"
+  %".21" = trunc i32 0 to i8
+  store i8 %".21", i8* %".20"
+  %".23" = load i8*, i8** %"ptr"
+  %".24" = getelementptr i8, i8* %".23", i32 1
+  store i8* %".24", i8** %"ptr"
+  %".26" = load i8*, i8** %"ptr"
+  %".27" = load i8, i8* %".26"
+  %".28" = zext i8 %".27" to i32
+  %".29" = call i32 @"putchar"(i32 %".28")
+  ret i32 0
+}
+
+declare i32 @"putchar"(i32 %".1")
+
+declare i32 @"getchar"()
+
+declare void @"llvm.memset.p0i8.i32"(i8* %".1", i8 %".2", i32 %".3", i1 %".4")
+</code></pre>
+<p>可以看出：三重循环直接被展开成了常量，当然，LLVM 本身对中间表示还有进一步的优化，它的优化能力十分强劲。</p>
+<p>:::important
+未完待续...
+:::</p>
+]]></content>
+    <author>
+      <name>Milk</name>
+    </author>
+    <category term="实验"></category>
+  </entry>
+  <entry>
+    <title>校园网设备间通信被阻断分析</title>
+    <link href="https://milk2715093695.github.io/posts/campus-network/" rel="alternate" type="text/html"/>
+    <id>https://milk2715093695.github.io/posts/campus-network/</id>
+    <published>2025-09-26T00:00:00.000Z</published>
+    <updated>2025-09-26T00:00:00.000Z</updated>
+    <summary>在日常生活中，常常有通过校园网进行局域网通信的需求，但是本校校园网内设备间无法直接正常通信，本文对此进行分析并尝试绕过隔离机制。</summary>
+    <content type="html"><![CDATA[<p>:::note
+截至目前，本人尚未完全查明校园网设备间通信隔离的全部机制。本文记录了已验证的绕过方案与若干失败尝试，旨在分享复现细节与分析结论；如有读者发现更优方案或能补充原理，欢迎在评论区交流与指正。本人刚开始接触计算机网络，可能存在错误或表述不清之处，也欢迎批评指正。
+:::</p>
+<h2>目录</h2>
+<ul>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#1-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86">1. 第一部分</a>
+<ul>
+<li><a href="#11-%E5%AE%9E%E9%AA%8C%E8%83%8C%E6%99%AF">1.1. 实验背景</a></li>
+<li><a href="#12-%E5%AE%9E%E9%AA%8C%E8%AE%BE%E5%A4%87%E4%B8%8E%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83">1.2. 实验设备与网络环境</a></li>
+<li><a href="#13-%E5%AE%9E%E9%AA%8C%E6%AD%A5%E9%AA%A4">1.3. 实验步骤</a>
+<ul>
+<li><a href="#131-ip-%E5%9C%B0%E5%9D%80%E4%B8%8E%E5%AD%90%E7%BD%91%E5%88%86%E6%9E%90">1.3.1. IP 地址与子网分析</a></li>
+<li><a href="#132-%E5%88%9D%E6%AD%A5%E6%B5%8B%E8%AF%95ping">1.3.2. 初步测试：ping</a></li>
+<li><a href="#133-%E6%8E%A8%E6%B5%8B">1.3.3. 推测</a></li>
+<li><a href="#134-%E5%B0%9D%E8%AF%95%E8%A7%A3%E5%86%B3">1.3.4. 尝试解决</a></li>
+<li><a href="#135-%E6%B5%8B%E8%AF%95">1.3.5. 测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86">2. 第二部分</a>
+<ul>
+<li><a href="#21-%E5%A5%87%E6%80%AA%E7%9A%84%E9%9D%9E%E5%AF%B9%E7%A7%B0%E6%80%A7">2.1. 奇怪的非对称性</a></li>
+<li><a href="#22-%E5%AE%BF%E8%88%8D%E7%BD%91%E6%AE%B5">2.2. 宿舍网段</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE">参考文献</a></li>
+</ul>
+<h2>1. 第一部分</h2>
+<h3>1.1. 实验背景</h3>
+<p>在日常使用场景中，设备间快速且可靠地传输文件是一项常见需求。许多人习惯使用微信文件传输助手进行点对点传输，但该方式在若干方面存在不足：</p>
+<ul>
+<li>微信会将 <code>.png</code> 自动转为 <code>.jpg</code>，导致带透明通道的图片丢失透明信息。</li>
+<li>某些可执行或安装包（如 <code>.apk</code>）在传输后会被改名为 <code>.apk.1</code>，用户需手动恢复后缀或借助额外工具，体验不佳。</li>
+<li>大文件传输速度较慢，且在网络不稳定时容易中断。</li>
+<li>通过第三方平台传输存在隐私与安全风险。</li>
+</ul>
+<p>因此，使用基于 <code>rsync</code> 的局域网传输是更为理想的替代方案，优点包括：断点续传、增量同步、可选压缩以加速传输、以及基于 <code>ssh</code> 的加密通道以提高安全性。</p>
+<p>但要在局域网内使用 <code>rsync</code>，前提是两台设备必须能够互相连通。然而在校园网环境下，经常遇到同一子网内设备无法直接互通的情况。本文的目标是分析该限制的成因并记录可复现的绕过思路与实践细节。</p>
+<h3>1.2. 实验设备与网络环境</h3>
+<ul>
+<li><strong>实验设备</strong>：一台 macOS 笔记本与一台已获取 root 权限的 Android 手机。理论上任意两台可修改路由表或防火墙规则的设备都可执行类似实验，但因我手上只有一台电脑与一部手机，所以大部分操作在手机端完成；若使用两台电脑，某些步骤可能更容易复现与调试。</li>
+<li><strong>网络环境</strong>：中山大学珠海校区教学楼的校园网网段。需要说明的是，不同网络（如宿舍网段或校外 Wi‑Fi）可能存在不同的策略与表现，因此部分的结论基于上述教学楼网络的观测结果（在第二部分可能会进行宿舍网段的尝试）。</li>
+</ul>
+<p>:::important
+Android 手机使用 <code>termux</code> 进行实验，部分命令可能需要 <code>root</code> 权限与 <code>termux</code> 的 <code>root-repo</code> 部分包。
+:::</p>
+<h3>1.3. 实验步骤</h3>
+<h4>1.3.1. IP 地址与子网分析</h4>
+<p>执行 <code>ifconfig</code> 命令即可查看设备的 IP 地址（Windows 设备请使用 <code>ipconfig</code>），此处我对输出进行了过滤以保护隐私。</p>
+<p><img src="https://milk2715093695.github.io/_astro/1.CMQUO-dq_ZRkD4S.webp" alt="电脑端" /></p>
+<p><img src="https://milk2715093695.github.io/_astro/2.C8YgFuxM_ZuMSL0.webp" alt="手机端" /></p>
+<p>此处可以看到：</p>
+<ul>
+<li>电脑的 IP 地址为 172.17.26.206</li>
+<li>网关地址为 172.17.0.1</li>
+<li>手机的 IP 地址为 172.17.46.229</li>
+</ul>
+<p>教学楼的网段为 172.17.0.0/18，子网掩码为 255.255.192.0。进行与运算可知：</p>
+<ul>
+<li>172.17.26.206 &amp; 255.255.192.0 = 172.17.0.0</li>
+<li>172.17.46.229 &amp; 255.255.192.0 = 172.17.0.0</li>
+</ul>
+<p>因此两台设备处于同一子网内，理论上可以直接通过 IP 地址进行通信。</p>
+<h4>1.3.2. 初步测试：ping</h4>
+<p>在电脑上执行 <code>ping 172.17.46.229</code>，发现无法连通：</p>
+<p><img src="https://milk2715093695.github.io/_astro/3.jVDKNQ_2_Z1eCu0t.webp" alt="ping" /></p>
+<p>在手机上执行 <code>ping 172.17.26.206</code>，同样无法连通：</p>
+<p><img src="https://milk2715093695.github.io/_astro/4.BvI65dT2_ZzvwGo.webp" alt="ping" /></p>
+<p>:::note
+这里本来想再在两边同时抓包进行测试的，但是当时忘记了，后续的实验环节会进行抓包测试。
+:::</p>
+<h4>1.3.3. 推测</h4>
+<p>根据上述实验结果与一些资料的收集，推测校园网可能通过 <strong>AP（Access Point，接入点）隔离</strong>机制来限制。</p>
+<p>在无线网络中，AP 通常起到把无线终端接入有线网络的作用，同时也可以负责数据的收发、转发。</p>
+<p>在默认情况下，如果多个终端连接到同一个 AP，它们之间可以直接通过二层转发进行通信。例如，两台接入同一 Wi-Fi 的电脑之间，可以不经过外网网关直接互相传输文件。</p>
+<pre><code>flowchart LR
+  subgraph WLAN[无线局域网]
+    direction TB
+    A[设备 A&lt;br/&gt;（电脑）]
+    AP[AP / 无线路由器]
+    B[设备 B&lt;br/&gt;（手机）]
+  end
+
+  subgraph CORE[上游网络]
+    GW[网关 / 路由器]
+    Internet[互联网]
+  end
+
+  A -.-&gt;|Wi-Fi连接| AP
+  A ===|二层直接转发| B
+  B -.-&gt;|Wi-Fi连接| AP
+  AP --&gt; GW --&gt; Internet
+
+  classDef local fill:#fff2f0,stroke:#ff8a65;
+  class WLAN local;
+
+  linkStyle 0 stroke:red,stroke-width:2px;
+  linkStyle 1 stroke:red,stroke-width:2px;
+  linkStyle 2 stroke:red,stroke-width:2px;
+  linkStyle 3 stroke:red,stroke-width:2px;
+  linkStyle 4 stroke:red,stroke-width:2px;
+</code></pre>
+<p>然而，校园网或公共 Wi-Fi 场景中，往往会启用 AP 隔离机制。其作用是：</p>
+<ul>
+<li>防止恶意用户在局域网内进行端口扫描、中间人攻击等行为。</li>
+<li>防止被感染的设备在局域网内传播病毒。</li>
+<li>减少不必要的局域网通信，提高管理员对网络流量的监控与控制能力。</li>
+</ul>
+<pre><code>flowchart LR
+  subgraph WLAN[无线接入网]
+    direction TB
+    A[设备 A&lt;br/&gt;（电脑）]
+    AP[AP / 无线路由器&lt;br/&gt;启用 AP 隔离]
+    B[设备 B&lt;br/&gt;（手机）]
+  end
+
+  subgraph CORE[上游网络]
+    GW[网关 / 路由器]
+    Internet[互联网]
+  end
+
+  A -.-&gt;|Wi-Fi连接| AP
+  B -.-&gt;|Wi-Fi连接| AP
+  A ===|包被丢弃| B
+
+  AP --&gt; GW --&gt; Internet
+
+  classDef isol fill:#fff2f0,stroke:#ff8a65;
+  class WLAN isol;
+
+  linkStyle 0 stroke:red,stroke-width:2px;
+  linkStyle 1 stroke:red,stroke-width:2px;
+  linkStyle 2 stroke:red,stroke-width:2px;
+  linkStyle 3 stroke:red,stroke-width:2px;
+  linkStyle 4 stroke:red,stroke-width:2px;
+</code></pre>
+<p>因此，从实验结果推测，即便电脑和手机处于同一网段，由于 AP 隔离的存在，它们的数据包会被 AP 丢弃或阻断，导致无法直接互通。</p>
+<p>换句话说，只要流量从二层变成三层（跨网段）路由，AP 隔离就失效，因为 AP 不会阻止正常路由转发。</p>
+<p>如果可以让请求包沿着 <code>A -&gt; AP -&gt; GW -&gt; AP -&gt; B</code>，响应包沿着 <code>B -&gt; AP -&gt; GW -&gt; AP -&gt; A</code> 路径传输，那么就能实现设备间的通信。</p>
+<p><a href="https://blog.csdn.net/qq_25177949/article/details/143834903">参考文章 1：Windows 下 AP 隔离的解决方案</a></p>
+<p><a href="https://www.cnblogs.com/wangbingbing/p/17931315.html">参考文章 2：Linux 下 AP 隔离的解决方案</a></p>
+<p>:spoiler[那本文算不算弥补了没有 macOS 和 Android 的 AP 隔离解决方案呢？<s>好吧其实和 Linux 基本上一样</s>]</p>
+<pre><code>flowchart LR
+  subgraph WLAN[无线接入网]
+    direction TB
+    A[设备 A&lt;br/&gt;（电脑）]
+    AP1[AP / 无线路由器&lt;br/&gt;发送端]
+    AP2[AP / 无线路由器&lt;br/&gt;接收端]
+    B[设备 B&lt;br/&gt;（手机）]
+  end
+
+  subgraph CORE[上游网络]
+    GW[网关 / 路由器]
+    Internet[互联网]
+  end
+
+  %% Wi-Fi 连接
+  A -.-&gt;|Wi-Fi连接| AP1
+  B -.-&gt;|Wi-Fi连接| AP2
+
+  %% 二层直连被阻断
+  A ===|二层直连被阻断| B
+
+  %% 绕过路径：通过网关转发
+  A --&gt;|流量经网关转发| AP1
+  AP1 --&gt; GW
+  GW --&gt; AP2
+  AP2 --&gt;|最终到达| B
+  GW --&gt; Internet
+
+  classDef isol fill:#fff2f0,stroke:#ff8a65;
+  class WLAN isol;
+
+  linkStyle 0 stroke:red,stroke-width:2px;
+  linkStyle 1 stroke:red,stroke-width:2px;
+  linkStyle 2 stroke:red,stroke-width:2px;
+  linkStyle 3 stroke:red,stroke-width:2px;
+  linkStyle 4 stroke:red,stroke-width:2px;
+  linkStyle 5 stroke:red,stroke-width:2px;
+  linkStyle 6 stroke:red,stroke-width:2px;  
+</code></pre>
+<h4>1.3.4. 尝试解决</h4>
+<p>首先，确认电脑和手机与网关之间的连通性。</p>
+<p>在电脑上执行 <code>ping 172.17.0.1</code>，发现可以连通：</p>
+<p><img src="https://milk2715093695.github.io/_astro/5.POjuFZa9_1hNLe7.webp" alt="ping" /></p>
+<p>在手机上执行 <code>ping 172.17.0.1</code>，同样可以连通：</p>
+<p><img src="https://milk2715093695.github.io/_astro/6.kd1cWLjD_27NIGK.webp" alt="ping" /></p>
+<p>其次，通过设置路由规则，让电脑和手机之间的流量先经过网关转发。</p>
+<p>由于每次连接 Wi-Fi 时，路由表中就会被添加上子网间直连的路由规则，并且占据优先级较高，因此需要先删除原先的子网通信规则。然后再添加与对方通信经过网关的路由规则。</p>
+<p>:::important
+因为我已经安装了 <code>iproute2mac</code>，所以我用的是 <code>ip route</code> 风格的命令，如果是实际 macOS 操作应该用 <code>route</code> 命令。</p>
+<p>另外由于我临时看的 <code>ip route</code> 的使用方法，因此这里不一定完全准确，但是至少在我的电脑上达到效果了。</p>
+<p>如果出了问题导致无法上网也很好恢复，只需要断开 Wi-Fi 再重新连接即可。
+:::</p>
+<p>在 macOS 电脑上执行以下命令：</p>
+<pre><code>sudo route -n delete -net 172.17.0.0 netmask 255.255.192.0
+sudo route -n add -host 172.17.46.229 172.17.0.1
+</code></pre>
+<p><img src="https://milk2715093695.github.io/_astro/7.EDV_S2uw_1kCV9P.webp" alt="route" /></p>
+<p>在手机上执行以下命令（需要 <code>root</code> 权限）：</p>
+<pre><code>su -c "ip route del 172.17.0.0/18 dev wlan0"
+su -c "ip route add 172.17.26.206 via 172.17.0.1 dev wlan0"
+</code></pre>
+<p><img src="https://milk2715093695.github.io/_astro/8.C3B2nI4o_1GqwHA.webp" alt="route" /></p>
+<h4>1.3.5. 测试</h4>
+<p>首先，进行 <code>ping</code> 的测试，在手机上执行 <code>ping 172.17.26.206</code>，发现可以连通：</p>
+<p><img src="https://milk2715093695.github.io/_astro/9.CZysyBh3_1avBel.webp" alt="ping" /></p>
+<p>其次，进行 <code>ssh</code> 的测试，在手机上执行 <code>ssh milk@172.17.26.206</code>，发现可以连通：</p>
+<p><img src="https://milk2715093695.github.io/_astro/10.Dmu4BpGF_Z4W77c.webp" alt="ssh" /></p>
+<p>既然 <code>ssh</code> 已经可以连通，那么 <code>rsync</code> 也应该可以连通，因此这里就不进行测试了。:spoiler[<s>那当然是因为无需测试而不是因为我当时忘记测试了啦。</s>]</p>
+<h2>2. 第二部分</h2>
+<h3>2.1. 奇怪的非对称性</h3>
+<p>读完第一部分你是不是觉得这个问题已经完全解决了呢？其实不然，当时的实验中，<strong>只有我的手机能 <code>ping</code> 通电脑，而我的电脑却不能 <code>ping</code> 通手机</strong>！这就很奇怪了，既然手机能够 <code>ping</code> 通电脑，那就说明手机发送给电脑的包和电脑发送给手机的包都能正常到达对方，那么为什么电脑却不能 <code>ping</code> 通手机呢？</p>
+<p>于是我决定：在电脑 <code>ping</code> 手机的同时，在手机上通过 <code>tcpdump</code> 进行抓包，看看电脑发送的包是否能够到达手机。</p>
+<p>在电脑上执行 <code>ping 172.17.46.229</code>，发现无法连通：</p>
+<p><img src="https://milk2715093695.github.io/_astro/11.-u9Ggouq_YB8JG.webp" alt="ping" /></p>
+<p>在手机上执行 <code>tcpdump</code> 进行抓包：</p>
+<pre><code>su -c "tcpdump -i wlan0 icmp and host 172.17.26.206 -n -vvv -e"
+</code></pre>
+<p><img src="https://milk2715093695.github.io/_astro/12.I0BpQtvM_1cEbln.webp" alt="tcpdump" /></p>
+<p>观察结果，发现手机已经收到了电脑发送的 ICMP 请求包，但是手机没有发送 ICMP 响应包？这是为什么呢？我也不知道，目前这个问题还正在研究当中。经过检查不是防火墙的问题。</p>
+<h3>2.2. 宿舍网段</h3>
+<p>下次有空继续写。</p>
+<h2>参考文献</h2>
+<ol>
+<li>我叫czc. 【windows】校园网AP隔离解决方案笔记-解决校内设备之间无法互相通信的臭毛病-附破解程序[J/OL]. CSDN, 2024-11-21. <a href="https://blog.csdn.net/qq_25177949/article/details/143834903">链接</a></li>
+<li>王冰冰. AP隔离的设备互相访问[J/OL]. 博客园, 2023-12-27. <a href="https://www.cnblogs.com/wangbingbing/p/17931315.html">链接</a></li>
+</ol>
+]]></content>
+    <author>
+      <name>Milk</name>
+    </author>
+    <category term="实验"></category>
+  </entry>
+  <entry>
+    <title>关于数学的一些有趣讨论（一：圆周率）</title>
+    <link href="https://milk2715093695.github.io/posts/math-discussion/" rel="alternate" type="text/html"/>
+    <id>https://milk2715093695.github.io/posts/math-discussion/</id>
+    <published>2025-09-16T00:00:00.000Z</published>
+    <updated>2025-09-16T00:00:00.000Z</updated>
+    <summary>之前在 B 站上向别人科普了一些圆周率的知识，顺手整理了一下在各个问题中看到的圆周率的有趣讨论和我的思考，整理成这篇文章。</summary>
+    <content type="html"><![CDATA[<blockquote>
+<p>Let me show you. $\pi$. The ratio of the circumference of a circle to its diameter. And this is just the beginning. It keeps on going. Forever. Without ever repeating.
+Which means that contained within this string of decimals is every single other number. Your birth date, combination to your locker, your social security number. It's all in there somewhere.
+And if you convert these decimals into letters, you would have every word that ever existed in every possible combination. The first syllable you spoke as a baby, the name of your latest crush, your entire life story from beginning to end.
+Everything we ever say or do, all of the world's infinite possibilities rest within this one simple circle.
+Now what you do with that information, what it's good for, well, that would be up to you.<br />
+— *Person of Interest, Season 2 Episode 11.</p>
+</blockquote>
+<blockquote>
+<p>看看。$\pi$ 是圆的周长与直径的比值，但这只是开始，它不断延伸，永无止境，从不重复。
+这意味着在这串小数中，潜藏着所有的数字：你的生日，你储物柜的密码，你的社会安全号码，它们都在 $\pi$ 的某个地方。
+如果你把这些小数转换成字母，你会得到所有曾经存在过的词语，以及它们能组成的所有可能的组合。你婴儿时期发出的第一个音节，你暗恋之人的名字，以及，你的人生，从头到尾。<br />
+我们说过与做过的一切，世界的一切无限可能，都蕴含在这个简单的圆之中。<br />
+至于你如何理解这些信息，它能带来什么，那就取决于你自己了。<br />
+——《疑犯追踪》第二季第 11 集。</p>
+</blockquote>
+<p>:::note
+当然，<strong>其实这句话是错误的</strong>，或者说，是<strong>未证实的</strong>（详细会在后文展开说明），:spoiler[但是很浪漫不是吗？]
+:::</p>
+<p>我突然想起一个不知道从哪里看见过的科幻小故事（虽然其实没什么关联性）：一天，一群外星人来到地球，它们被这里的风土人情所吸引，所以打算把地球上很多信息都记录下来带回去。于是，它们把信息编码成 $n$ 进制数 $\overline{a_1 a_2 \dots a_n}$，然后再变成 $\alpha = \overline{0.a_1 a_2 \dots a_n}$，这是一个小于 $1$ 的数，于是它们在一根木棍的 $\alpha$ 比例位置处画了一条线，带走了地球上所有的信息。</p>
+<p>接下来，我将首先针对一些在这个电视剧片段的视频的评论区中看到的有关圆周率的观点作出讨论，在这个过程中，我会忽略一些可能需要的前置知识，:spoiler[比如泰勒展开的推导]，因为我认为这些知识对于讨论圆周率本身来说，并不是必要的。</p>
+<h2>目录</h2>
+<ul>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#1-%E7%83%AD%E8%BA%AB%E5%85%B3%E4%BA%8E%E8%AF%84%E8%AE%BA%E5%8C%BA%E4%B8%AD%E7%9A%84%E5%B8%B8%E8%A7%81%E8%A7%82%E7%82%B9">1. 热身：关于评论区中的常见观点</a>
+<ul>
+<li><a href="#11-%E8%A7%82%E7%82%B9%E4%B8%80%E5%9B%A0%E4%B8%BA%E5%9C%86%E5%91%A8%E7%8E%87%E6%98%AF%E6%97%A0%E9%99%90%E4%B8%8D%E5%BE%AA%E7%8E%AF%E5%B0%8F%E6%95%B0%E6%89%80%E4%BB%A5%E5%AE%83%E4%BC%9A%E5%87%BA%E7%8E%B0%E6%89%80%E6%9C%89%E6%95%B0%E5%AD%97%E7%BB%84%E5%90%88">1.1. 观点一：因为圆周率是无限不循环小数，所以它会出现所有数字组合</a>
+<ul>
+<li><a href="#111-%E7%AC%AC%E4%B8%80%E7%A7%8D%E5%8F%8D%E4%BE%8B">1.1.1. 第一种反例</a></li>
+<li><a href="#112-%E6%8B%93%E5%B1%95%E5%88%98%E7%BB%B4%E5%84%BF%E6%95%B0">1.1.2. 拓展：刘维儿数</a></li>
+<li><a href="#113-%E7%AC%AC%E4%BA%8C%E7%A7%8D%E5%8F%8D%E4%BE%8B">1.1.3. 第二种反例</a></li>
+</ul>
+</li>
+<li><a href="#12-%E8%A7%82%E7%82%B9%E4%BA%8C%E6%A0%B9%E6%8D%AE%E6%97%A0%E9%99%90%E7%8C%B4%E5%AD%90%E5%AE%9A%E5%BE%8B%E5%9C%86%E5%91%A8%E7%8E%87%E6%80%BB%E4%BC%9A%E5%87%BA%E7%8E%B0%E6%89%80%E6%9C%89%E6%95%B0%E5%AD%97%E7%BB%84%E5%90%88">1.2. 观点二：根据无限猴子定律，圆周率总会出现所有数字组合</a></li>
+<li><a href="#13-%E8%A7%82%E7%82%B9%E4%B8%89%E5%9C%86%E5%91%A8%E7%8E%87%E7%9A%84%E6%89%80%E6%9C%89%E6%95%B0%E7%A0%81%E7%9A%84%E5%87%BA%E7%8E%B0%E9%A2%91%E7%8E%87%E6%98%AF%E5%9D%87%E5%8C%80%E7%9A%84%E6%89%80%E4%BB%A5%E5%BF%85%E7%84%B6%E5%87%BA%E7%8E%B0%E6%89%80%E6%9C%89%E6%95%B0%E5%AD%97%E7%BB%84%E5%90%88">1.3. 观点三：圆周率的所有数码的出现频率是均匀的，所以必然出现所有数字组合</a>
+<ul>
+<li><a href="#131-%E7%99%BE%E5%BA%A6%E7%99%BE%E7%A7%91%E8%AF%8D%E6%9D%A1%E5%90%88%E5%8F%96%E6%95%B0">1.3.1. 百度百科词条：合取数</a></li>
+<li><a href="#132-%E6%8B%93%E5%B1%95simply-normal-number-%E4%B8%8E-normal-number">1.3.2. 拓展：Simply Normal Number 与 Normal Number</a></li>
+<li><a href="#133-simply-normal-number-%E6%98%AF%E5%90%A6%E5%BF%85%E7%84%B6%E5%8C%85%E5%90%AB%E6%89%80%E6%9C%89%E6%95%B0%E5%AD%97%E7%BB%84%E5%90%88">1.3.3. Simply Normal Number 是否必然包含所有数字组合？</a></li>
+<li><a href="#134-%E5%9C%86%E5%91%A8%E7%8E%87%E6%98%AF%E5%90%A6%E6%98%AF-simply-normal-number">1.3.4. 圆周率是否是 Simply Normal Number？</a></li>
+</ul>
+</li>
+<li><a href="#14-%E8%A7%82%E7%82%B9%E5%9B%9B%E5%9C%86%E5%91%A8%E7%8E%87%E6%97%A0%E7%A9%B7%E6%97%A0%E5%B0%BD%E6%98%AF%E5%9B%A0%E4%B8%BA%E7%9B%AE%E5%89%8D%E7%AE%97%E5%8A%9B%E4%B8%8D%E8%B6%B3">1.4. 观点四：圆周率无穷无尽是因为目前算力不足</a>
+<ul>
+<li><a href="#141-%E8%AF%81%E6%98%8E%E6%AD%A5%E9%AA%A4-1%E8%AF%81%E6%98%8E%E9%9D%9E%E9%9B%B6%E6%9C%89%E7%90%86%E6%95%B0%E6%AD%A3%E5%88%87%E5%80%BC%E9%83%BD%E6%98%AF%E6%97%A0%E7%90%86%E6%95%B0">1.4.1. 证明步骤 1：证明非零有理数正切值都是无理数</a></li>
+<li><a href="#142-%E8%AF%81%E6%98%8E%E6%AD%A5%E9%AA%A4-2%E8%AF%81%E6%98%8E%E5%9C%86%E5%91%A8%E7%8E%87%E6%98%AF%E6%97%A0%E7%90%86%E6%95%B0">1.4.2. 证明步骤 2：证明圆周率是无理数</a></li>
+<li><a href="#143-%E8%A1%A5%E5%85%85-1%E8%BF%9E%E5%88%86%E6%95%B0%E5%B1%95%E5%BC%80%E7%9A%84%E6%8E%A8%E5%AF%BC">1.4.3. 补充 1：连分数展开的推导</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-%E5%85%B3%E4%BA%8E%E6%95%B0%E5%AD%A6%E4%B8%AD%E7%9A%84%E5%8F%8D%E7%9B%B4%E8%A7%89%E7%8E%B0%E8%B1%A1">2. 关于数学中的反直觉现象</a>
+<ul>
+<li><a href="#21-borwein-%E7%A7%AF%E5%88%86">2.1. Borwein 积分</a></li>
+</ul>
+</li>
+</ul>
+<h2>1. 热身：关于评论区中的常见观点</h2>
+<h3>1.1. 观点一：因为圆周率是无限不循环小数，所以它会出现所有数字组合</h3>
+<p>这个观点是在初学者中非常常见的误区，纠正这个观点可以说几乎就是我当初进行关于圆周率的科普的初衷。</p>
+<p>首先重新表述一下这个观点，他希望采用的经典三段论论证法：</p>
+<ol>
+<li>前提：<strong>无限不循环小数中包含所有数字组合</strong></li>
+<li>条件：圆周率是无限不循环小数</li>
+<li>结论：圆周率包含所有数字组合</li>
+</ol>
+<p>那么，我们要说明他的论证方法有误，实际上只需要推翻前提即可。</p>
+<h4>1.1.1. 第一种反例</h4>
+<p>显然，我们可以构造一个无限不循环小数：$a = 0.1010010001000010\ldots$，它的规律是，相邻的两个 $1$ 之间间隔的 $0$ 的个数依次增加，即 $a = \sum\limits_{i=1}^{\infty} \frac{1}{10^{\frac{i(i + 1)}{2}}}$。很显然，$a$ 不可能是循环小数，并且，$a$ 中不包含 $1$，因此，$a$ 不包含所有数字组合，所以，前提不成立，论证方法有误。</p>
+<h4>1.1.2. 拓展：刘维儿数</h4>
+<p>事实上，刚才那个反例的构造完全是为了方便对方理解，它其实只需要稍加改造，就可以得到刘维儿数：</p>
+<p>$$
+a = 0.110001000000000000000001000\ldots = \sum\limits_{i=1}^{\infty} \frac{1}{10^{i!}}
+$$</p>
+<p><s>但是，这个数难道有什么特殊的吗？</s></p>
+<p>事实上，这个数非常特殊，它是最早被证明出的超越数。</p>
+<p>什么是超越数？简而言之，就是不能用整系数多项式表示的数，即不是代数数的数。譬如，任何有理数都可以表示为两个整数的比值，即 $a = \frac{p}{q}$，那么，它就一定是方程 $q * x - p = 0$ 的根，所以<strong>任意有理数都是代数数</strong>。而反过来，方程 $x^2 - 2 = 0$ 的根，即 $\sqrt{2}$，就不能表示为两个整数的比值，因此，$\sqrt{2}$ 是代数数但不是有理数，<strong>代数数是一个比有理数更广泛的数集</strong>。</p>
+<h4>1.1.3. 第二种反例</h4>
+<p>看完第一个反例，许多人会觉得，这个数太特殊了，而且人工构造的痕迹太重，所以不能作为反例。事实上只需要找到一个反例，不管是什么，就可以否定一个全称命题了，但是无所谓，因为其他反例也非常容易构造：将 $\pi$ 的十进制表示中，任意出现数码 $9$ 的地方，替换为 $0$，得到一个新的数 $b$，显然，$9$ 一定不会出现在 $b$ 中，因此，$b$ 不包含所有数字组合。</p>
+<p>你可能注意到了，我这里<strong>并没有说 $b$ 是无理数</strong>，尽管这看似非常显然，因为只要把 $b$ 写出来就发现它非常凌乱，但是，不能因为一个数看起来很乱，就断定它不是无理数。事实上，不断进行刚才的替换，继续把 $8$ 换成 $0$，$7$ 换成 $0$，几次之后，$\pi$ 就变成了有理数 $0$，因此刚才的操作确实是有让无理数变成有理数的风险的。</p>
+<p>那么 $b$ 到底是有理数还是无理数呢？我的答案是：<strong>我不知道</strong>！如果有人能证明或者推翻这个结论，也可以发给我让我观摩一下。</p>
+<h3>1.2. 观点二：根据无限猴子定律，圆周率总会出现所有数字组合</h3>
+<p>这个观点实际上算的上“Not Even Wrong”了（原谅我用词可能比较重），因为无限猴子定律讲的是随机事件，而圆周率本身根本是一个<strong>确定的</strong>数，这两个完全是不同的领域，所以，这个观点是错误的。</p>
+<p>但是呢，这个观点其实也有迹可循，因为 $\pi$ 表现的真的很像一个每一位都是从 $0$ 到 $9$ 随机分布的数，有关这种“看起来随机的确定数”，其实数学上还真的有专门的研究，叫做 <strong>Normal Number</strong>，中文译文通常为“<strong>正规数</strong>”或者“<strong>正常数</strong>”，在<a href="#131-%E6%8B%93%E5%B1%95simply-normal-number-%E4%B8%8E-normal-number">后文</a>我会再次提到它，这里留个引子。但是这块内容的中文翻译其实十分混乱，比如另一个叫 <strong>Regular Number</strong>（<strong>正则数</strong>）的概念，有时也会被翻译成“正规数”。因此我后文尽量用英文来描述，以减少歧义。</p>
+<h3>1.3. 观点三：圆周率的所有数码的出现频率是均匀的，所以必然出现所有数字组合</h3>
+<p>这个观点非常有意思。因为这已经越来越接近 Normal Number 的定义了（事实上就是 Simply Normal Number 的定义），所以，我们有必要先了解一下 Normal Number。</p>
+<p>不过，在此之前，请允许我说一下收集资料过程中发现的一个有趣的事情</p>
+<h4>1.3.1. 百度百科词条：合取数</h4>
+<p>很多人会在这种话题下提到“合取数”这个概念，事实上我一开始在评论区的科普也提到了这个名词，借着这个机会我也想更加具体的了解它，比如它是在哪篇论文中提出的？它的英文名字是什么？等等。</p>
+<p>然而，当我查询这个词条的时候，却遇到了让我非常惊讶的事情：在<a href="https://baike.baidu.com/item/%E5%90%88%E5%8F%96%E6%95%B0/16404539">合取数的百度百科词条</a>中，我竟然没有找到任何关于这个词的英文名或者文献，甚至于，这个词条连一个参考文献都没有？</p>
+<p><img src="https://milk2715093695.github.io/_astro/2.DyBSRdCr_2h4AoY.webp" alt="合取数的百度百科词条" /></p>
+<p>我在词条讨论区提问也没有收到任何回复，经查，这个词条最早由一名名为 zistrong 的用户于 2014-12-18 编辑，而我在中文互联网上找到比较早的一篇是来自<a href="https://blog.csdn.net/weixin_34113237/article/details/91911608">π里包含了所有可能的数字组合吗？</a>，我写到这才发现，我正在做的内容十几年前就有人在干了（虽然本文还扩展了很多另外的东西）。它发布于 2014-12-17，和百度百科词条的创建时间只相差一天，不知道是不是巧合，另外，这篇文章声称自己转载自<a href="https://my.oschina.net/oospace/blog/357356">开源中国的一篇文章</a>，但是这个链接我无法访问，于是考证到此结束了。</p>
+<h4>1.3.2. 拓展：Simply Normal Number 与 Normal Number</h4>
+<p>Simply Normal Number 是 Normal Number 的一个子集，它们的定义如下：</p>
+<blockquote>
+<p>A real number is said to be <strong>simply normal</strong> in an integer base $b$ if its infinite sequence of digits is distributed uniformly in the sense that each of the digit values has the same natural density $\frac{1}{b}$. A number is said to be normal in base $b$ if, for every positive integer $n$, all possible strings $n$ digits long have density $b^{-n}$.</p>
+<p>来源：<a href="https://handwiki.org/wiki/Normal_number">HandWiki - Normal number</a></p>
+</blockquote>
+<p>:::notice
+值得注意的是 HandWiki 在学术上并不是一个非常权威的网站。但是既然是科普，那么学术权威性就不一定那么重要了。
+:::</p>
+<p>简单来说：如果某个数在某个进制下，它的每一位数码的出现频率都是 $\frac{1}{b}$，那么这个数就是 Simply Normal Number，如果它满足对于任意正整数 $n$，所有长度为 $n$ 的字符串的出现频率都是 $b^{-n}$，那么它就是 Normal Number。</p>
+<p>用更加形式化的语言：</p>
+<blockquote>
+<p>设 $b$ 是大于 $1$ 的整数，$x$ 是实数。考虑以 $b$ 为底的位值记数法中 $x$ 的数字序列。若 $s$ 是以 $b$ 为底的有限数字序列，我们以 $N(s, n)$ 表示字串 $s$ 在 $x$ 的开首 $n$ 个数字出现次数。数 $x$ 称为以 $b$ 为底正规当且仅当对任意长度 $k$ 的字串 $s$ 有：$\lim_{n \to \infty} \frac{N(s, n)}{n} = \frac{1}{b^k}$。</p>
+<p>来源：<a href="https://baike.baidu.com/item/%E6%AD%A3%E8%A7%84%E6%95%B0/8660908">百度百科 - 正规数</a></p>
+</blockquote>
+<p>不难看出，只要 $\pi$ 是一个 Normal Number，那么它必然会出现所有数字组合。</p>
+<p>但是，这个观点的意思是：Simply Normal Number 中必然出现每一种数字组合。那下面我们先来否定这一点。</p>
+<h4>1.3.3. Simply Normal Number 是否必然包含所有数字组合？</h4>
+<p>先说结论：<strong>不一定</strong>。仍然通过我惯用的举反例。令 $c = 0.012345678900112233445566778899000\ldots$，显然，$c$ 中不含有 $10$ 这个连续数字组合，接下来我们证明 $c$ 是 Simply Normal Number。</p>
+<p>首先，我们计算 $0$ 的出现概率的极限：
+在前 $n$ 位中，我们考虑最后一个完整的 $0$ 到 $9$ 的重复序列，假设这个序列中，每一个数码出现的次数都是 $k$，那么，在截断到这一位后，$0$ 出现了 $\sum\limits_{i=1}^{k} i = \frac{k(k + 1)}{2}$，总共有 $\sum\limits_{i=1}^{k} 10 \cdot i = 5k(k + 1)$，由于这是最后一个完整的序列，因此在这之后到下一次产生一个完整序列，$0$ 的出现概率是先增加后减小的，并且两端都恰好是 $\frac{1}{10}$，因此出现概率 $\frac{\frac{k(k + 1)}{2} + (k + 1)}{5k(k + 1) + (k + 1)} \geq P_0 \geq \frac{1}{10}$，考虑 $\lim_{k \to \infty} \frac{\frac{k(k + 1)}{2} + (k + 1)}{5k(k + 1) + (k + 1)} = \lim_{k \to \infty} \frac{k + 1}{10k + 2} = \frac{1}{10}$，根据夹逼定理，极限存在，并且 $\lim_{k \to \infty} P_0 = \frac{1}{10}$。</p>
+<p>类似的，可以证明 $1$ 到 $9$ 的出现概率都是 $\frac{1}{10}$。因此，$c$ 是 Simply Normal Number，并且不包含 $10$ 这个数字组合。</p>
+<h4>1.3.4. 圆周率是否是 Simply Normal Number？</h4>
+<p>据前文所属，如果 $\pi$ 是一个 Normal Number，那出现所有数字组合是必然的，这也是数学界正在努力的方向，然而，目前数学界还没有证明 $\pi$ 是一个 Normal Number，甚至，据我所知，目前数学界还没有证明 $\pi$ 是一个 Simply Normal Number。</p>
+<p>但是我们可以做一个小实验看一下 $\pi$ 的前 $n$ 位的分布。</p>
+<p>代码如下（后续有机会我会介绍这个算法，参考《数值计算方法》）：</p>
+<pre><code>from collections import Counter
+from math import ceil
+from typing import Dict, List, Tuple
+
+import matplotlib.pyplot as plt
+import mpmath
+
+
+def compute_pi(n_digits: int) -&gt; str:
+    """Chudnovsky 算法"""
+    digits_per_term = 14
+    n_terms = ceil(n_digits / digits_per_term)
+    mpmath.mp.dps = n_digits + 2  # 设置浮点精度防止舍入误差
+
+    C = 426880 * mpmath.sqrt(10005)
+    sum_term = mpmath.mpf(0)
+
+    for k in range(n_terms):
+        numerator = (-1) ** k * mpmath.factorial(6 * k) * (13591409 + 545140134 * k)
+        denominator = (
+            mpmath.factorial(3 * k) * (mpmath.factorial(k) ** 3) * (640320 ** (3 * k))
+        )
+        sum_term += numerator / denominator
+
+    pi_val = C / sum_term
+    return str(pi_val)[: 2 + n_digits]
+
+
+def digit_frequency_over_k(
+    pi_str: str, step: int = 1000
+) -&gt; Tuple[List[int], Dict[str, List[float]]]:
+    pi_digits = pi_str.replace(".", "")
+    k_list = []
+    freq_dict = {str(i): [] for i in range(10)}
+
+    for k in range(step, len(pi_digits) + 1, step):
+        k_list.append(k)
+        counter = Counter(pi_digits[:k])
+        for d in range(10):
+            freq_dict[str(d)].append(counter[str(d)] / k)
+
+    return k_list, freq_dict
+
+
+if __name__ == "__main__":
+    n = 10000  # 计算前 10000 位
+    step = 1
+
+    pi_digits = compute_pi(n)
+    k_list, freq_dict = digit_frequency_over_k(pi_digits, step)
+
+    # 跳过前 100 位频率波动过大的区域让图像容易观察
+    start_index = 100
+    k_plot = k_list[start_index:]
+    freq_plot = {d: freq_dict[d][start_index:] for d in freq_dict}
+
+    plt.figure(figsize=(12, 6))
+    for d in range(10):
+        plt.plot(k_plot, freq_plot[str(d)], label=f"Digit {d}")
+
+    # 懒得设置字体，所以用英文防止乱码
+    plt.xlabel("Number of digits")
+    plt.ylabel("Frequency")
+    plt.title("Digit frequency of π for first k digits (after first 100 digits)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+</code></pre>
+<p>运行结果如下：</p>
+<p><img src="https://milk2715093695.github.io/_astro/1.CwbCyWBB_Z1PPaSP.webp" alt="Digit frequency of π for first k digits (after first 100 digits)" /></p>
+<h3>1.4. 观点四：圆周率无穷无尽是因为目前算力不足</h3>
+<p>如果说观点二让我觉得“Not Even Wrong”，那么观点四就无语到让我都没法说是“Not Even Wrong”了，当然，我们并不能苛求普通人能够自主证明 $\pi$ 为什么无限不循环。但是 $\pi$ 作为无理数应该是在义务教育阶段就不断强调的，尽管义务教育阶段并不会给出证明，至少作为一个结论是应该被接受的。不过既然有人不知道，正好，我接下来就进行一个简要的证明。</p>
+<h4>1.4.1. 证明步骤 1：证明非零有理数正切值都是无理数</h4>
+<p>如果已知 $\tan x$ 的连分数展开（其证明我将在<a href="#143-%E8%A1%A5%E5%85%85-1%E8%BF%9E%E5%88%86%E6%95%B0%E5%B1%95%E5%BC%80%E7%9A%84%E6%8E%A8%E5%AF%BC">后文</a>给出，在本节中请默认为真）为：</p>
+<p>$$
+\tan x = \frac{x}{1 - \frac{x^2}{3 - \frac{x^2}{5 - \frac{x^2}{7 - \ddots}}}}
+$$</p>
+<p>如果有理数 $x = \frac{p}{q}$，那么：</p>
+<p>$$
+\tan \frac{p}{q} = \frac{p}{q - \frac{p^2}{3q - \frac{p^2}{5q - \frac{p^2}{7q - \ddots}}}}
+$$</p>
+<p>令 $f_k = \frac{p^2}{kq - \frac{p^2}{(k + 2)q - \frac{p^2}{(k + 4)q - \ddots}}}$，那么：$\tan \frac{p}{q} = \frac{p}{q - \frac{p^2}{3q - \frac{p^2}{5q - \ddots \frac{p^2}{(k - 2)q - f_k}}}}$。</p>
+<p>不难发现，当 $k$ 足够大时，$0 &lt; f_k &lt; 1$。令最小的让 $0 &lt; f_k &lt; 1$ 的 $k$ 为 $k_0$，那么显然，由于在表达式中除了 $f_k$ 都是有限的有理式，因此 $\tan \frac{p}{q}$ 是有理数的充分必要条件就是 $f_k$ 是有理数。</p>
+<p>接下来我们使用反证法，反设 $f_k$ 是有理数 $\frac{B}{A}$，其中 $B &gt; A &gt; 0$，那么有：</p>
+<p>$$
+\frac{B}{A} = f_k = \frac{p^2}{kq - \frac{p^2}{(k + 2)q - \frac{p^2}{(k + 4)q - \ddots}}} = \frac{p^2}{kq - f_{k+2}}
+$$</p>
+<p>化简得到：
+$f_{k+2} = \frac{Bkq - Ap^2}{B}$，而类似的，也有 $0 &lt; f_{k+2} &lt; 1$，而这个表达式又说明了 $f_{k+2}$ 也是有理数，那么，令 $C = Bkq - Ap^2$，有 $f_{k+2} = \frac{C}{B}$，于是有 $A &gt; B &gt; C &gt; 0$，类似地，这个过程可以不断的进行下去，得到 $A &gt; B &gt; C &gt; D &gt; \cdots &gt; 0$，但是，它们都是有限的正整数，而严格大于导致了每一次至少让分子变小 $1$，因此这个过程最多进行 $A$ 次，这与之前的这个过程必须无限进行矛盾，因此，反证假设 $f_k$ 是有理数是不成立的，因此 $\tan \frac{p}{q}$ 的值都是无理数。</p>
+<h4>1.4.2. 证明步骤 2：证明圆周率是无理数</h4>
+<p>由于在 1.4.1 节中，我们已经证明了，如果 $x$ 是有理数，那么 $\tan x$ 是无理数，而 $\tan \frac{\pi}{4} = 1$，这并不是无理数，因此 $\frac{\pi}{4}$ 是无理数，由于 $\pi = 4 \times \frac{\pi}{4}$，因此 $\pi$ 是无理数。证毕。</p>
+<blockquote>
+<p>这条证明思路最早由 Lambert 在 1768 年提出。</p>
+</blockquote>
+<h4>1.4.3. 补充 1：连分数展开的推导</h4>
+<p>:::tip
+受限于篇幅和阅读成本，这部分证明是不严谨的，仅作为参考，其收敛域不做讨论，尽管要在证明中用到实际上是需要说明收敛域的。此外，这里给出的 $\sin x$ 和 $\cos x$ 的泰勒展开也不做深入，因为有关这些是非常容易找到资料的。
+:::</p>
+<p>首先，给出几个泰勒展开式：</p>
+<p>$$
+\begin{cases}
+\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \cdots = \sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i + 1}}{(2i + 1)!} \
+\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \frac{x^6}{6!} + \cdots = \sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i)!} \
+\frac{\sin x}{x} = 1 - \frac{x^2}{3!} + \frac{x^4}{5!} - \frac{x^6}{7!} + \cdots = \sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i + 1)!}
+\end{cases}
+$$</p>
+<p>于是，有：</p>
+<p>$$
+\tan x = \frac{x}{\frac{\cos x}{\frac{\sin x}{x}}} = \frac{x}{\frac{\sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i)!}}{\sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i + 1)!}}}
+$$</p>
+<p>记：$P_1(x) = \sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i)!}$，$Q_1(x) = \sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i + 1)!}$，$\frac{P_k(x)}{Q_{k}(x)} = \frac{P_k(0)}{Q_k(0)} + \frac{x^2}{\frac{P_{k + 1}(x)}{Q_{k + 1}(x)}}$，再令 $\lambda_{k} = \frac{P_k(0)}{Q_k(0)}$，有：</p>
+<p>$$
+\begin{cases}
+P_{k + 1}(x) = Q_k(x) \
+Q_{k + 1}(x) = \frac{P_k(x) - \lambda_k Q_k(x)}{x^2} \
+\lambda_{k} = \frac{P_k(0)}{Q_k(0)} \
+P_1(x) = \sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i)!} \
+Q_1(x) = \sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i + 1)!}
+\end{cases}
+$$</p>
+<p>$$
+\begin{aligned}
+\frac{P_1(x)}{Q_1(x)} - 1 &amp;= \frac{\sum\limits_{i=0}^{\infty} (-1)^i x^{2i} [\frac{1}{(2i)!} - \frac{1}{(2i + 1)!}]}{\sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i + 1)!}} \
+&amp;= \frac{\sum\limits_{i=1}^{\infty} (-1)^i x^{2i} \frac{2i}{(2i + 1)!}}{\sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i + 1)!}} \
+&amp;= x^2 \frac{\sum\limits_{i=0}^{\infty} (-1)^{(i + 1)} x^{2i} \frac{2i + 2}{(2i + 3)!}}{\sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i + 1)!}} \
+&amp;= \frac{x^2}{\frac{\sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i + 1)!}}{\sum\limits_{i=0}^{\infty} (-1)^{(i + 1)} x^{2i} \frac{2i + 2}{(2i + 3)!}}}
+\end{aligned}
+$$</p>
+<p>故 $P_2(x) = \sum\limits_{i=0}^{\infty} (-1)^i \frac{x^{2i}}{(2i + 1)!}$，$Q_2(x) = \sum\limits_{i=0}^{\infty} (-1)^{(i + 1)} x^{2i} \frac{2i + 2}{(2i + 3)!}$。显然 $\lambda_1 = 1$，$\lambda_2 = -3$</p>
+<p>归纳假设：</p>
+<p>$$
+\begin{cases}
+P_{2m}(x) = \sum\limits_{i=0}^{\infty} (-1)^{i + m - 1} \frac{(2i + 2)(2i + 4)\ldots(2i + 4m - 4)}{(2i + 4m - 3)!} x^{2i} \
+Q_{2m}(x) = \sum\limits_{i=0}^{\infty} (-1)^{i + m} \frac{(2i + 2)(2i + 4)\ldots(2i + 4m - 2)}{(2i + 4m - 1)!} x^{2i} \
+\lambda_{2m} = -(4m - 1) \
+P_{2m + 1}(x) = \sum\limits_{i=0}^{\infty} (-1)^{i + m} \frac{(2i + 2)(2i + 4)\ldots(2i + 4m - 2)}{(2i + 4m - 1)!} x^{2i} \
+Q_{2m + 1}(x) = \sum\limits_{i=0}^{\infty} (-1)^{i + m} \frac{(2i + 2)(2i + 4)\ldots(2i + 4m)}{(2i + 4m + 1)!} x^{2i} \
+\lambda_{2m + 1} = 4m + 1
+\end{cases}
+$$</p>
+<p>那么，有：</p>
+<p>$$
+P_{2k + 2}(x) = Q_{2k + 1}(x) = \sum\limits_{i=0}^{\infty} (-1)^{i + k} \frac{(2i + 2)(2i + 4)\ldots(2i + 4k)}{(2i + 4k + 1)!} x^{2i}
+$$</p>
+<p>$$
+\begin{aligned}
+Q_{2k + 2}(x) &amp;= \frac{P_{2k + 1}(x) - \lambda_k Q_{2k+ 1}(x)}{x^2} \
+&amp;= \frac{\sum\limits_{i=0}^{\infty} (-1)^{i + k} \frac{(2i + 2)(2i + 4)\ldots(2i + 4k - 2)}{(2i + 4k - 1)!} x^{2i} [1 - \frac{(4k + 1)(2i + 4k)}{(2i + 4k)(2i + 4k + 1)}]}{x^2} \
+&amp;= \frac{\sum\limits_{i=1}^{\infty} (-1)^{i + k} \frac{(2i + 2)(2i + 4)\ldots(2i + 4k - 2)}{(2i + 4k - 1)!} x^{2i} \frac{2i}{2i + 4k + 1}}{x^2} \
+&amp;= \sum\limits_{i=0}^{\infty} (-1)^{i + k + 1} \frac{(2i + 2)(2i + 4)(2i + 6)\ldots(2i + 4k)}{(2i + 4k + 1)!} x^{2i} \frac{1}{2i + 4k + 3} \
+&amp;= \sum\limits_{i=0}^{\infty} (-1)^{i + k + 1} \frac{(2i + 2)(2i + 4)(2i + 6)\ldots(2i + 4k + 2)}{(2i + 4k + 3)!} x^{2i}
+\end{aligned}
+$$</p>
+<p>$P_{2k + 3}$ 与 $Q_{2k + 3}$ 的推导类似，这里省略，最后，由数学归纳法，假设成立。</p>
+<p>因此：</p>
+<p>$$
+\begin{aligned}
+\tan x &amp;= \frac{x}{\frac{P_1(x)}{Q_1(x)}} \
+&amp;= \frac{x}{\lambda_1 + \frac{x^2}{\frac{P_2(x)}{Q_2(x)}}} \
+&amp;= \frac{x}{\lambda_1 + \frac{x^2}{\lambda_2 + \frac{x^2}{\frac{P_3(x)}{Q_3(x)}}}} \
+&amp;= \cdots \
+&amp;= \frac{x}{\lambda_1 + \frac{x^2}{\lambda_2 + \frac{x^2}{\lambda_3 + \cdots}}} \
+&amp;= \frac{x}{1 + \frac{x^2}{-3 + \frac{x^2}{5 + \frac{x^2}{-7 + \cdots}}}} \
+&amp;= \frac{x}{1 - \frac{x^2}{3 - \frac{x^2}{5 - \frac{x^2}{7 - \cdots}}}} \
+\end{aligned}
+$$</p>
+<p>于是，我们得到了 $\tan x$ 的连分数展开式。</p>
+<h2>2. 关于数学中的反直觉现象</h2>
+<h3>2.1. Borwein 积分</h3>
+<p>这个相关的内容，其实 3blue1brown（<a href="https://www.youtube.com/@3blue1brown">Youtube</a>、<a href="https://space.bilibili.com/88461692">Bilibili</a>）已经讲的很明白了，所以我写这部分主要是验证自己的学习情况，详情可以参考这个视频：</p>
+<p>&lt;iframe width="100%" height="468" src="//player.bilibili.com/player.html?bvid=BV18e4y1u7BH&amp;p=1&amp;autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" &amp;autoplay=0&gt; &lt;/iframe&gt;</p>
+]]></content>
+    <author>
+      <name>Milk</name>
+    </author>
+    <category term="随笔"></category>
+  </entry>
+</feed>
