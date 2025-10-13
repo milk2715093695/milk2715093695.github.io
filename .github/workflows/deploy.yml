@@ -15,9 +15,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Disable Jekyll
-        run: touch dist/.nojekyll
-
       - name: Checkout your repository using git
         uses: actions/checkout@v4
       - name: Install, build, and upload your site
