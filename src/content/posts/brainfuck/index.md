@@ -12,7 +12,7 @@ date: 2025-10-12
 ---
 
 :::tip
-Brainfuck 这个名字真的是一点都没起错，我写的时候感觉我的 Brain 正在被 F*ck。
+Brainfuck 这个名字真的是一点都没起错:spoiler[，我写的时候感觉我的 Brain 正在被 Fuck。]
 :::
 
 ## 目录
