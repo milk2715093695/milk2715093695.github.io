@@ -5,7 +5,7 @@
   <link href="https://milk2715093695.github.io/" rel="alternate" type="text/html"/>
   <link href="https://milk2715093695.github.io/atom.xml" rel="self" type="application/atom+xml"/>
   <id>https://milk2715093695.github.io/</id>
-  <updated>2025-10-13T12:02:30.054Z</updated>
+  <updated>2025-10-13T12:08:45.841Z</updated>
   <language>zh_CN</language>
   <entry>
     <title>Android 7.1.1 AVD 安装与激活 Xposed 框架全流程</title>
@@ -391,7 +391,7 @@ exit 0
     <updated>2025-10-12T00:00:00.000Z</updated>
     <summary>看到一个非常有趣的编程语言：Brainfuck，它只有 8 种操作，却是图灵完备的。</summary>
     <content type="html"><![CDATA[<p>:::tip
-Brainfuck 这个名字真的是一点都没起错，我写的时候感觉我的 Brain 正在被 F*ck。
+Brainfuck 这个名字真的是一点都没起错:spoiler[，我写的时候感觉我的 Brain 正在被 Fuck。]
 :::</p>
 <h2>目录</h2>
 <ul>

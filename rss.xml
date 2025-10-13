@@ -362,7 +362,7 @@ exit 0
 &lt;p&gt;&lt;img src=&quot;https://milk2715093695.github.io/_astro/10.BlwhKJvY_1VC5dQ.webp&quot; alt=&quot;Xposed Installer&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;如果出现了这个界面，说明 Xposed 框架已经安装成功。&lt;/p&gt;
 </content:encoded></item><item><title>浅谈 Brainfuck</title><link>https://milk2715093695.github.io/posts/brainfuck/</link><guid isPermaLink="true">https://milk2715093695.github.io/posts/brainfuck/</guid><description>看到一个非常有趣的编程语言：Brainfuck，它只有 8 种操作，却是图灵完备的。</description><pubDate>Sun, 12 Oct 2025 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;:::tip
-Brainfuck 这个名字真的是一点都没起错，我写的时候感觉我的 Brain 正在被 F*ck。
+Brainfuck 这个名字真的是一点都没起错:spoiler[，我写的时候感觉我的 Brain 正在被 Fuck。]
 :::&lt;/p&gt;
 &lt;h2&gt;目录&lt;/h2&gt;
 &lt;ul&gt;
