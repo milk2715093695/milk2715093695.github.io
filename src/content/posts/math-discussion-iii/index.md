@@ -15,7 +15,7 @@ draft: false
 1. $a_n \notin A_{n-1}$
 2. $n \mid (S_{n-1} + a_n)$
 
-~~☝️🤓注意力惊人的读者不难发现这个其实就是[OCIS:A01944](https://oeis.org/A019444)。~~
+~~☝️🤓注意力惊人的读者不难发现这个其实就是 [OCIS:A01944](https://oeis.org/A019444)。~~
 
 证明或推翻：$a_i = j \Leftrightarrow a_j = i$。
 
@@ -366,6 +366,30 @@ $S_k = k \cdot h(k) = S_{k-2} + f(k - 1) + f(k) = (k - 2) \cdot h(k - 2) + 2 f(k
 1. 由在 $i \le n$ 时候成立的三条归纳假设，证明 $i = n + 1$ 时的第一条归纳假设。
 2. 由在 $i \le n$ 时候成立的三条归纳假设，证明 $i = n + 1$ 时的第二条归纳假设。
 3. 由在 $i \le n$ 时候成立的三条归纳假设，以及第二部分中，已经证明完成的 $i = n + 1$ 时的第二条归纳假设，证明 $i = n + 1$ 时的第三条归纳假设。
+
+
+<div style="width: 40%; margin: auto;">
+具体的证明脉络
+
+```mermaid
+graph TD
+    subgraph Level_n["第 n 层假设"]
+        A_n["Aₙ"]
+        B_n["Bₙ"]
+        C_n["Cₙ"]
+    end
+
+    subgraph Level_np1["第 n+1 层结论"]
+        A_np1["Aₙ₊₁"]
+        B_np1["Bₙ₊₁"]
+        C_np1["Cₙ₊₁"]
+    end
+
+    A_n & B_n --> A_np1
+    A_n & B_n & C_n --> B_np1
+    B_n & C_n & B_np1 --> C_np1
+```
+</div>
 
 最终，由数学归纳法，三条性质得证。我们的目标就是三条性质中的第二条。
 
