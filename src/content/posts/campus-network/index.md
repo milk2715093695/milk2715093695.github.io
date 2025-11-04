@@ -5,7 +5,7 @@ pinned: false
 description: 在日常生活中，常常有通过校园网进行局域网通信的需求，但是本校校园网内设备间无法直接正常通信，本文对此进行分析并尝试绕过隔离机制。
 tags: [网络, 编程, 校园网]
 category: 实验
-licenseName: "CC BY-NC-SA 4.0"
+licenseName: "CC BY-SA 4.0"
 author: Milk
 draft: false
 ---
@@ -297,5 +297,7 @@ su -c "tcpdump -i wlan0 icmp and host 172.17.26.206 -n -vvv -e"
 
 ## 参考文献
 
-1. 我叫czc. 【windows】校园网AP隔离解决方案笔记-解决校内设备之间无法互相通信的臭毛病-附破解程序[J/OL]. CSDN, 2024-11-21. [链接](https://blog.csdn.net/qq_25177949/article/details/143834903)
-2. 王冰冰. AP隔离的设备互相访问[J/OL]. 博客园, 2023-12-27. [链接](https://www.cnblogs.com/wangbingbing/p/17931315.html)
+1. 我叫czc. 【windows】校园网AP隔离解决方案笔记-解决校内设备之间无法互相通信的臭毛病-附破解程序[J/OL]. CSDN, 2024-11-21. [在线访问](https://blog.csdn.net/qq_25177949/article/details/143834903)
+2. 王冰冰. AP隔离的设备互相访问[J/OL]. 博客园, 2023-12-27. [在线访问](https://www.cnblogs.com/wangbingbing/p/17931315.html)
+
+> 参考文献使用 **CC BY-SA 4.0** 协议授权。按照该协议，本文同样遵循 CC BY-SA 4.0 许可，允许商业或非商业用途的共享与再创作，但必须保留原作者署名，并以相同协议方式进行再发布。
