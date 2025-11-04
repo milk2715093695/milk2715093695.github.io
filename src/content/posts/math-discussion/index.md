@@ -52,6 +52,8 @@ draft: false
     - [1.4.3. 补充 1：连分数展开的推导](#143-补充-1连分数展开的推导)
 - [2. 关于数学中的反直觉现象](#2-关于数学中的反直觉现象)
   - [2.1. Borwein 积分](#21-borwein-积分)
+- [附录](#附录)
+  - [附录 A. 计算 pi 的前 n 位小数分布的 Python 代码](#附录-a-计算-pi-的前-n-位小数分布的-python-代码)
 
 ## 1. 热身：关于评论区中的常见观点
 
@@ -155,75 +157,7 @@ Simply Normal Number 是 Normal Number 的一个子集，它们的定义如下�
 
 代码如下（后续有机会我会介绍这个算法，参考《数值计算方法》）：
 
-```python
-from collections import Counter
-from math import ceil
-from typing import Dict, List, Tuple
-
-import matplotlib.pyplot as plt
-import mpmath
-
-
-def compute_pi(n_digits: int) -> str:
-    """Chudnovsky 算法"""
-    digits_per_term = 14
-    n_terms = ceil(n_digits / digits_per_term)
-    mpmath.mp.dps = n_digits + 2  # 设置浮点精度防止舍入误差
-
-    C = 426880 * mpmath.sqrt(10005)
-    sum_term = mpmath.mpf(0)
-
-    for k in range(n_terms):
-        numerator = (-1) ** k * mpmath.factorial(6 * k) * (13591409 + 545140134 * k)
-        denominator = (
-            mpmath.factorial(3 * k) * (mpmath.factorial(k) ** 3) * (640320 ** (3 * k))
-        )
-        sum_term += numerator / denominator
-
-    pi_val = C / sum_term
-    return str(pi_val)[: 2 + n_digits]
-
-
-def digit_frequency_over_k(
-    pi_str: str, step: int = 1000
-) -> Tuple[List[int], Dict[str, List[float]]]:
-    pi_digits = pi_str.replace(".", "")
-    k_list = []
-    freq_dict = {str(i): [] for i in range(10)}
-
-    for k in range(step, len(pi_digits) + 1, step):
-        k_list.append(k)
-        counter = Counter(pi_digits[:k])
-        for d in range(10):
-            freq_dict[str(d)].append(counter[str(d)] / k)
-
-    return k_list, freq_dict
-
-
-if __name__ == "__main__":
-    n = 10000  # 计算前 10000 位
-    step = 1
-
-    pi_digits = compute_pi(n)
-    k_list, freq_dict = digit_frequency_over_k(pi_digits, step)
-
-    # 跳过前 100 位频率波动过大的区域让图像容易观察
-    start_index = 100
-    k_plot = k_list[start_index:]
-    freq_plot = {d: freq_dict[d][start_index:] for d in freq_dict}
-
-    plt.figure(figsize=(12, 6))
-    for d in range(10):
-        plt.plot(k_plot, freq_plot[str(d)], label=f"Digit {d}")
-
-    # 懒得设置字体，所以用英文防止乱码
-    plt.xlabel("Number of digits")
-    plt.ylabel("Frequency")
-    plt.title("Digit frequency of π for first k digits (after first 100 digits)")
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-```
+[附录 A. 计算 pi 的前 n 位小数分布的 Python 代码](#附录-a-计算-pi-的前-n-位小数分布的-python-代码)
 
 运行结果如下：
 
@@ -367,3 +301,77 @@ $$
 <iframe width="100%" height="468" src="//player.bilibili.com/player.html?bvid=BV18e4y1u7BH&p=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" &autoplay=0> </iframe>
 
 Borwein 积分是指：
+
+## 附录
+
+### 附录 A. 计算 pi 的前 n 位小数分布的 Python 代码
+
+```python
+from collections import Counter
+from math import ceil
+from typing import Dict, List, Tuple
+
+import matplotlib.pyplot as plt
+import mpmath
+
+
+def compute_pi(n_digits: int) -> str:
+    """Chudnovsky 算法"""
+    digits_per_term = 14
+    n_terms = ceil(n_digits / digits_per_term)
+    mpmath.mp.dps = n_digits + 2  # 设置浮点精度防止舍入误差
+
+    C = 426880 * mpmath.sqrt(10005)
+    sum_term = mpmath.mpf(0)
+
+    for k in range(n_terms):
+        numerator = (-1) ** k * mpmath.factorial(6 * k) * (13591409 + 545140134 * k)
+        denominator = (
+            mpmath.factorial(3 * k) * (mpmath.factorial(k) ** 3) * (640320 ** (3 * k))
+        )
+        sum_term += numerator / denominator
+
+    pi_val = C / sum_term
+    return str(pi_val)[: 2 + n_digits]
+
+
+def digit_frequency_over_k(
+    pi_str: str, step: int = 1000
+) -> Tuple[List[int], Dict[str, List[float]]]:
+    pi_digits = pi_str.replace(".", "")
+    k_list = []
+    freq_dict = {str(i): [] for i in range(10)}
+
+    for k in range(step, len(pi_digits) + 1, step):
+        k_list.append(k)
+        counter = Counter(pi_digits[:k])
+        for d in range(10):
+            freq_dict[str(d)].append(counter[str(d)] / k)
+
+    return k_list, freq_dict
+
+
+if __name__ == "__main__":
+    n = 10000  # 计算前 10000 位
+    step = 1
+
+    pi_digits = compute_pi(n)
+    k_list, freq_dict = digit_frequency_over_k(pi_digits, step)
+
+    # 跳过前 100 位频率波动过大的区域让图像容易观察
+    start_index = 100
+    k_plot = k_list[start_index:]
+    freq_plot = {d: freq_dict[d][start_index:] for d in freq_dict}
+
+    plt.figure(figsize=(12, 6))
+    for d in range(10):
+        plt.plot(k_plot, freq_plot[str(d)], label=f"Digit {d}")
+
+    # 懒得设置字体，所以用英文防止乱码
+    plt.xlabel("Number of digits")
+    plt.ylabel("Frequency")
+    plt.title("Digit frequency of π for first k digits (after first 100 digits)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+```
