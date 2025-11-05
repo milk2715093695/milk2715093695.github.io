@@ -15,7 +15,7 @@ draft: false
 1. $a_n \notin A_{n-1}$
 2. $n \mid (S_{n-1} + a_n)$
 
-~~☝️🤓注意力惊人的读者不难发现这个其实就是 [OCIS:A01944](https://oeis.org/A019444)。~~
+~~☝️🤓注意力惊人的读者不难发现这个其实就是 [OCIS 的 A01944](https://oeis.org/A019444)。~~
 
 证明或推翻：$a_i = j \Leftrightarrow a_j = i$。
 
