@@ -87,6 +87,12 @@ draft: false
 
 ## 3. 证明
 
+:::important
+本文证明的整体思路来源于 Venkatachala, B. J., *A Curious Bijection on Natural Numbers*, Journal of Integer Sequences, Vol 12 (2009)。  
+
+文章中的文字、图片和代码均为作者原创，并使用 **CC BY-NC-SA 4.0** 协议。虽然证明思路参考自论文，但所有表达、整理和绘图均为作者独立完成。
+:::
+
 ### 3.1. 转化
 
 首先，为了方便之后的证明，我们用函数表示数列，例如，定义 $f(n) = a_n, n \in \mathbb{N}^+$，这是因为下标表示如果发生嵌套会导致可读性很差
