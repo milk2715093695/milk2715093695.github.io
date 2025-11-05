@@ -1,7 +1,7 @@
 ---
 title: 关于数学的一些有趣讨论（三：一个有趣的数列和它的性质）
 published: 2025-11-04
-pinned: false
+pinned: true
 description: 来自一位 b 站网友在学习数列期间自己设计的一个题目。
 tags: [数学, 数列, 证明]
 category: 随笔
