@@ -405,7 +405,7 @@ adb push ./ /sdcard/Download/xposed
 ```
 
 进入 `adb shell` 并在 `/sdcard/Download/xposed` 目录下执行 `flash-script.sh`：
-![执行结果](8.webp)>
+![执行结果](8.webp)
 
 此时打开 `Xposed Installer` 应该能看到如下结果：
 
