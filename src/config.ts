@@ -79,12 +79,12 @@ export const siteConfig: SiteConfig = {
 			desktop: [
 				"/assets/desktop-banner/d1.webp",
 				"/assets/desktop-banner/d2.webp",
-				"/assets/desktop-banner/d3.webp",
 				"/assets/desktop-banner/d5.webp",
 				"/assets/desktop-banner/d7.webp",
 				"/assets/desktop-banner/d8.webp",
 				"/assets/desktop-banner/milk-d1.webp",
 				"/assets/desktop-banner/milk-d2.webp",
+				"/assets/desktop-banner/milk-d3.webp",
 			], // 桌面横幅图片
 			mobile: [
 				"/assets/mobile-banner/m1.webp",
@@ -184,12 +184,12 @@ export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 		desktop: [
 			"/assets/desktop-banner/d1.webp",
 			"/assets/desktop-banner/d2.webp",
-			"/assets/desktop-banner/d3.webp",
 			"/assets/desktop-banner/d5.webp",
 			"/assets/desktop-banner/d7.webp",
 			"/assets/desktop-banner/d8.webp",
 			"/assets/desktop-banner/milk-d1.webp",
 			"/assets/desktop-banner/milk-d2.webp",
+			"/assets/desktop-banner/milk-d3.webp",
 		], // 桌面横幅图片
 		mobile: [
 			"/assets/mobile-banner/m1.webp",
