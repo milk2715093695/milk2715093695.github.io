@@ -11,7 +11,7 @@ export const ja: Translation = {
 	// ナビゲーションバータイトル
 	[Key.navLinks]: "リンク",
 	[Key.navMy]: "私の",
-	[Key.navAbout]: "About",
+	[Key.navAbout]: "について",
 	[Key.navOthers]: "その他",
 
 	[Key.tags]: "タグ",
@@ -19,6 +19,7 @@ export const ja: Translation = {
 	[Key.recentPosts]: "最近の投稿",
 	[Key.postList]: "投稿リスト",
 	[Key.tableOfContents]: "目次",
+	[Key.tocEmpty]: "目次がありません",
 
 	// お知らせ
 	[Key.announcement]: "お知らせ",
