@@ -50,3 +50,7 @@ src/data/bangumi-data.json
 .claude/
 AGENTS.md
 CLAUDE.md
+
+# 本地任务书工作区
+/taskbooks/
+/.taskbook-backups/
