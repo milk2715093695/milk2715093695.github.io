@@ -54,3 +54,5 @@ CLAUDE.md
 # 本地任务书工作区
 /taskbooks/
 /.taskbook-backups/
+# Bilibili generated data
+src/data/bilibili-data.json

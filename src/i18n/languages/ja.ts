@@ -342,4 +342,8 @@ export const ja: Translation = {
 	[Key.profileStatsPageViews]: "ページビュー",
 	[Key.profileStatsVisits]: "アクセス数",
 	[Key.profileStatsUnavailable]: "統計情報は利用できません",
+
+	// レイアウト切り替え
+	[Key.switchToGridMode]: "グリッドビュー切り替え",
+	[Key.switchToListMode]: "リストビューに切り替え",
 };
