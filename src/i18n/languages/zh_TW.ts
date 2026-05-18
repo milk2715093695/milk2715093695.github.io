@@ -78,7 +78,12 @@ export const zh_TW: Translation = {
 	[Key.animeStudio]: "製作",
 	[Key.animeEmpty]: "暫無追番資料",
 	[Key.animeEmptyBangumi]: "請檢查 Bangumi 設定或網路連線",
+	[Key.animeEmptyBilibili]: "請檢查 Bilibili 設定或網路連線",
 	[Key.animeEmptyLocal]: "請在 src/data/anime.ts 檔案中新增番劇資訊",
+	[Key.animeConfigBilibili]:
+		"請在 src/config.ts 檔案中設定您的 Bilibili vmid",
+	[Key.animeConfigBangumi]:
+		"請在 src/config.ts 檔案中設定您的 Bangumi userId",
 
 	// 短文頁面
 	[Key.diarySubtitle]: "隨時隨地，分享生活",
@@ -250,6 +255,7 @@ export const zh_TW: Translation = {
 	[Key.passwordProtected]: "密碼保護",
 	[Key.passwordProtectedTitle]: "此內容受密碼保護",
 	[Key.passwordProtectedDescription]: "請輸入密碼以查看受保護的內容",
+	[Key.postEncrypted]: "已加密",
 	[Key.passwordPlaceholder]: "請輸入密碼",
 	[Key.passwordUnlock]: "解鎖",
 	[Key.passwordUnlocking]: "解鎖中...",
@@ -264,6 +270,7 @@ export const zh_TW: Translation = {
 	[Key.syntaxHighlightFailed]: "語法高亮失敗:",
 	[Key.autoSyntaxHighlightFailed]: "自動語法高亮也失敗:",
 	[Key.decryptionError]: "解密過程中發生錯誤:",
+	[Key.passwordHint]: "提示",
 
 	//最後編輯時間卡片
 	[Key.lastModifiedPrefix]: "距離上次編輯: ",
@@ -329,7 +336,17 @@ export const zh_TW: Translation = {
 	[Key.profileStatsVisits]: "造訪次數",
 	[Key.profileStatsUnavailable]: "統計不可用",
 
+	// 頁面瀏覽統計
+	[Key.pageViewsLoading]: "統計載入中...",
+	[Key.pageViewsUnavailable]: "統計不可用",
+
 	// 布局切換按鈕
 	[Key.switchToGridMode]: "切換到網格模式",
 	[Key.switchToListMode]: "切換到列表模式",
+
+	// 相关文章与随机文章
+	[Key.relatedPosts]: "相關文章",
+	[Key.randomPosts]: "隨機文章",
+	[Key.smartRecommend]: "智能推薦",
+	[Key.randomRecommend]: "隨機推薦",
 };

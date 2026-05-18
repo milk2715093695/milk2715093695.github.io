@@ -71,7 +71,10 @@ enum I18nKey {
 	animeStudio = "animeStudio",
 	animeEmpty = "animeEmpty",
 	animeEmptyBangumi = "animeEmptyBangumi",
+	animeEmptyBilibili = "animeEmptyBilibili",
 	animeEmptyLocal = "animeEmptyLocal",
+	animeConfigBilibili = "animeConfigBilibili",
+	animeConfigBangumi = "animeConfigBangumi",
 
 	// 短文页面
 	diarySubtitle = "diarySubtitle",
@@ -206,6 +209,7 @@ enum I18nKey {
 	passwordProtected = "passwordProtected",
 	passwordProtectedTitle = "passwordProtectedTitle",
 	passwordProtectedDescription = "passwordProtectedDescription",
+	postEncrypted = "postEncrypted",
 	passwordPlaceholder = "passwordPlaceholder",
 	passwordUnlock = "passwordUnlock",
 	passwordUnlocking = "passwordUnlocking",
@@ -216,6 +220,7 @@ enum I18nKey {
 	passwordDecryptFailed = "passwordDecryptFailed",
 	passwordDecryptRetry = "passwordDecryptRetry",
 	passwordUnlockButton = "passwordUnlockButton",
+	passwordHint = "passwordHint",
 	copyFailed = "copyFailed",
 	syntaxHighlightFailed = "syntaxHighlightFailed",
 	autoSyntaxHighlightFailed = "autoSyntaxHighlightFailed",
@@ -319,9 +324,19 @@ enum I18nKey {
 	profileStatsVisits = "profileStatsVisits",
 	profileStatsUnavailable = "profileStatsUnavailable",
 
+	// 页面访问量统计
+	pageViewsLoading = "pageViewsLoading",
+	pageViewsUnavailable = "pageViewsUnavailable",
+
 	// 布局切换按钮
 	switchToGridMode = "switchToGridMode",
 	switchToListMode = "switchToListMode",
+
+	// 相关文章与随机文章
+	relatedPosts = "relatedPosts",
+	randomPosts = "randomPosts",
+	smartRecommend = "smartRecommend",
+	randomRecommend = "randomRecommend",
 }
 
 export default I18nKey;

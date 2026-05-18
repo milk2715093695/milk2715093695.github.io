@@ -37,7 +37,7 @@ export const ja: Translation = {
 	[Key.friendsTags]: "タグ",
 	[Key.untitled]: "無題",
 	[Key.uncategorized]: "未分類",
-	[Key.noTags]: "タグなし",
+	[Key.noTags]: "タグはありません",
 
 	[Key.wordCount]: "語",
 	[Key.wordsCount]: "語",
@@ -78,9 +78,15 @@ export const ja: Translation = {
 	[Key.animeStudio]: "スタジオ",
 	[Key.animeEmpty]: "アニメデータなし",
 	[Key.animeEmptyBangumi]:
-		"Bangumiの設定またはネットワーク接続を確認してください",
+		"Bangumiの構成またはネットワークを接続を確認してください",
+	[Key.animeEmptyBilibili]:
+		"Bilibiliの構成またはネットワーク接続を確認してください",
 	[Key.animeEmptyLocal]:
-		"src/data/anime.tsファイルにアニメ情報を追加してください",
+		"src/data/anime.tsのファイルにアニメの情報を追加してください",
+	[Key.animeConfigBilibili]:
+		"src/config.tsファイルでBilibili vmidを設定してください",
+	[Key.animeConfigBangumi]:
+		"src/config.tsファイルでBangumi userIdを設定してください",
 
 	// 日記ページ
 	[Key.diarySubtitle]: "いつでもどこでも、生活を共有する",
@@ -101,7 +107,7 @@ export const ja: Translation = {
 	// 音楽プレーヤー
 	[Key.musicPlayer]: "音楽プレーヤー",
 	[Key.musicPlayerShow]: "音楽プレーヤーを表示",
-	[Key.musicPlayerHide]: "プレーヤーを隠す",
+	[Key.musicPlayerHide]: "音楽プレーヤーを非表示",
 	[Key.musicPlayerExpand]: "音楽プレーヤーを展開",
 	[Key.musicPlayerCollapse]: "プレーヤーを折りたたむ",
 	[Key.musicPlayerPause]: "一時停止",
@@ -125,8 +131,8 @@ export const ja: Translation = {
 
 	// アルバムページ
 	[Key.albums]: "アルバム",
-	[Key.albumsSubtitle]: "生活の美しい瞬間を記録する",
-	[Key.albumsEmpty]: "コンテンツなし",
+	[Key.albumsSubtitle]: "人生の美しい瞬間の記録です",
+	[Key.albumsEmpty]: "コンテンツはありません",
 	[Key.albumsEmptyDesc]:
 		"アルバムがまだ作成されていません。美しい思い出を追加してください！",
 	[Key.albumsBackToList]: "アルバムに戻る",
@@ -203,7 +209,12 @@ export const ja: Translation = {
 		"Feedly、Inoreaderまたは他のAtomリーダーを使用してこのサイトを購読することを推奨します。",
 	[Key.atomCopied]: "Atomリンクがクリップボードにコピーされました！",
 	[Key.atomCopyFailed]:
-		"コピーに失敗しました。手動でリンクをコピーしてください",
+		"コピーに失敗しました。リンクを手動で追加してください。",
+
+	// 壁紙モード
+	[Key.wallpaperBanner]: "バナーモード",
+	[Key.wallpaperFullscreen]: "フルスクリーンモード",
+	[Key.wallpaperNone]: "壁紙を非表示",
 
 	// スキルページ
 	[Key.skills]: "スキル",
@@ -261,7 +272,8 @@ export const ja: Translation = {
 	[Key.passwordProtectedTitle]:
 		"このコンテンツはパスワードで保護されています",
 	[Key.passwordProtectedDescription]:
-		"保護されたコンテンツを表示するにはパスワードを入力してください",
+		"保護されたコンテンツを表示するにはパスワードを入力してください。",
+	[Key.postEncrypted]: "暗号化",
 	[Key.passwordPlaceholder]: "パスワードを入力",
 	[Key.passwordUnlock]: "ロック解除",
 	[Key.passwordUnlocking]: "ロック解除中...",
@@ -271,13 +283,14 @@ export const ja: Translation = {
 	[Key.passwordRequired]: "パスワードを入力してください",
 	[Key.passwordVerifying]: "検証中...",
 	[Key.passwordDecryptFailed]:
-		"復号化に失敗しました。パスワードを確認してください",
-	[Key.passwordDecryptRetry]: "復号化に失敗しました。再試行してください",
-	[Key.passwordUnlockButton]: "ロック解除",
-	[Key.copyFailed]: "コピーに失敗しました：",
-	[Key.syntaxHighlightFailed]: "構文ハイライトに失敗しました：",
-	[Key.autoSyntaxHighlightFailed]: "自動構文ハイライトにも失敗しました：",
-	[Key.decryptionError]: "復号化中にエラーが発生しました：",
+		"復号に失敗しました。パスワードを確認してください。",
+	[Key.passwordDecryptRetry]: "復号に失敗しました。再度お試しください。",
+	[Key.passwordUnlockButton]: "ロックを解除",
+	[Key.copyFailed]: "コピーに失敗しました:",
+	[Key.syntaxHighlightFailed]: "構文の強調表示が失敗しました:",
+	[Key.autoSyntaxHighlightFailed]: "自動構文強調表示が失敗しました:",
+	[Key.decryptionError]: "復号中にエラーが発生しました:",
+	[Key.passwordHint]: "ヒント",
 
 	// 最終更新時間カード
 	[Key.lastModifiedPrefix]: "最終編集からの時間：",
@@ -289,18 +302,13 @@ export const ja: Translation = {
 	[Key.minute]: "分",
 	[Key.second]: "秒",
 
-	// 壁紙モード
-	[Key.wallpaperBanner]: "バナーモード",
-	[Key.wallpaperFullscreen]: "全画面モード",
-	[Key.wallpaperNone]: "壁紙を非表示",
-
-	// サイト統計
-	[Key.siteStats]: "サイト統計",
-	[Key.siteStatsPostCount]: "記事数",
-	[Key.siteStatsCategoryCount]: "カテゴリー数",
-	[Key.siteStatsTagCount]: "タグ数",
-	[Key.siteStatsTotalWords]: "総字数",
-	[Key.siteStatsRunningDays]: "運用日数",
+	// 統計情報
+	[Key.siteStats]: "統計情報",
+	[Key.siteStatsPostCount]: "投稿",
+	[Key.siteStatsCategoryCount]: "カテゴリー",
+	[Key.siteStatsTagCount]: "タグ",
+	[Key.siteStatsTotalWords]: "文字数の合計",
+	[Key.siteStatsRunningDays]: "稼働日数",
 	[Key.siteStatsLastUpdate]: "最終更新",
 	[Key.siteStatsDaysAgo]: "{days}日前",
 	[Key.siteStatsDays]: "{days}日",
@@ -343,7 +351,17 @@ export const ja: Translation = {
 	[Key.profileStatsVisits]: "アクセス数",
 	[Key.profileStatsUnavailable]: "統計情報は利用できません",
 
-	// レイアウト切り替え
-	[Key.switchToGridMode]: "グリッドビュー切り替え",
-	[Key.switchToListMode]: "リストビューに切り替え",
+	// ページビューの統計
+	[Key.pageViewsLoading]: "統計を読み込み中...",
+	[Key.pageViewsUnavailable]: "統計は利用できません",
+
+	// レイアウト切り替えボタン
+	[Key.switchToGridMode]: "グリッド表示に切り替え",
+	[Key.switchToListMode]: "リスト表示に切り替え",
+
+	// 関連記事とランダム記事
+	[Key.relatedPosts]: "関連記事",
+	[Key.randomPosts]: "ランダム記事",
+	[Key.smartRecommend]: "スマート",
+	[Key.randomRecommend]: "ランダム",
 };
