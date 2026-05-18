@@ -7,14 +7,12 @@ tags: [数学, 皮亚诺公理, 讨论]
 category: 随笔
 licenseName: "CC BY-NC-SA 4.0"
 author: Milk
-draft: true
+draft: false
 ---
 
 :::note
 本文仍在写作中。
 :::
-
-:spoiler[测试，如果网站构建成功应该能看见这句话]
 
 > Young man, in mathematics you don’t understand things. You just get used to them.
 > — John von Neumann
