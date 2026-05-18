@@ -56,10 +56,10 @@ export const siteConfig: SiteConfig = {
 		mode: "logo",
 		// 顶栏标题文本
 		text: "MizukiUI",
-		// 顶栏标题图标路径，默认使用 public/assets/home/home.png
-		icon: "assets/home/home.png",
+		// 顶栏标题图标路径，默认使用 public/assets/home/home.webp
+		icon: "assets/home/home.webp",
 		// 网站Logo图片路径
-		logo: "assets/home/default-logo.png",
+		logo: "assets/home/default-logo.webp",
 	},
 
 	// 页面自动缩放配置
@@ -129,6 +129,7 @@ export const siteConfig: SiteConfig = {
 				"/assets/desktop-banner/milk-d2.webp",
 				"/assets/desktop-banner/milk-d3.webp",
 				"/assets/desktop-banner/milk-d4.webp",
+				"/assets/desktop-banner/milk-d5.webp",
 			], // 桌面横幅图片
 			mobile: [
 				"/assets/mobile-banner/1.webp",
@@ -233,6 +234,11 @@ export const siteConfig: SiteConfig = {
 		height: 3, // 进度条高度 3px
 		duration: 6000, // 动画时长 6s
 	},
+
+	thirdPartyAnalytics: {
+		enable: false, // 是否启用第三方统计（Microsoft Clarity），默认关闭，启用可能影响 Lighthouse 评分
+		clarityId: "", // Clarity 项目 ID
+	},
 };
 export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 	src: {
@@ -241,6 +247,7 @@ export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 			"/assets/desktop-banner/milk-d2.webp",
 			"/assets/desktop-banner/milk-d3.webp",
 			"/assets/desktop-banner/milk-d4.webp",
+			"/assets/desktop-banner/milk-d5.webp",
 		], // 桌面横幅图片
 		mobile: [
 			"/assets/mobile-banner/1.webp",
