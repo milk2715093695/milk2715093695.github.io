@@ -10,6 +10,10 @@ author: Milk
 draft: false
 ---
 
+:::note
+本文仍在写作中。
+:::
+
 :::tip
 本文是 [关于数学的一些有趣讨论（一：圆周率）](https://milk2715093695.github.io/posts/math-discussion-i/) 的续篇，主要讨论数学中的反直觉现象。
 :::

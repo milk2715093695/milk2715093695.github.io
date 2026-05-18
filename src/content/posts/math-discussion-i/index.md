@@ -10,18 +10,18 @@ author: Milk
 draft: false
 ---
 
-> Let me show you. $\pi$. The ratio of the circumference of a circle to its diameter. And this is just the beginning. It keeps on going. Forever. Without ever repeating. 
-> Which means that contained within this string of decimals is every single other number. Your birth date, combination to your locker, your social security number. It's all in there somewhere. 
-> And if you convert these decimals into letters, you would have every word that ever existed in every possible combination. The first syllable you spoke as a baby, the name of your latest crush, your entire life story from beginning to end. 
-> Everything we ever say or do, all of the world's infinite possibilities rest within this one simple circle. 
-> Now what you do with that information, what it's good for, well, that would be up to you.  
+> Let me show you. $\pi$. The ratio of the circumference of a circle to its diameter. And this is just the beginning. It keeps on going. Forever. Without ever repeating.
+> Which means that contained within this string of decimals is every single other number. Your birth date, combination to your locker, your social security number. It's all in there somewhere.
+> And if you convert these decimals into letters, you would have every word that ever existed in every possible combination. The first syllable you spoke as a baby, the name of your latest crush, your entire life story from beginning to end.
+> Everything we ever say or do, all of the world's infinite possibilities rest within this one simple circle.
+> Now what you do with that information, what it's good for, well, that would be up to you.
 > — *Person of Interest, Season 2 Episode 11.
 
 > 看看。$\pi$ 是圆的周长与直径的比值，但这只是开始，它不断延伸，永无止境，从不重复。
 > 这意味着在这串小数中，潜藏着所有的数字：你的生日，你储物柜的密码，你的社会安全号码，它们都在 $\pi$ 的某个地方。
-> 如果你把这些小数转换成字母，你会得到所有曾经存在过的词语，以及它们能组成的所有可能的组合。你婴儿时期发出的第一个音节，你暗恋之人的名字，以及，你的人生，从头到尾。  
-> 我们说过与做过的一切，世界的一切无限可能，都蕴含在这个简单的圆之中。  
-> 至于你如何理解这些信息，它能带来什么，那就取决于你自己了。  
+> 如果你把这些小数转换成字母，你会得到所有曾经存在过的词语，以及它们能组成的所有可能的组合。你婴儿时期发出的第一个音节，你暗恋之人的名字，以及，你的人生，从头到尾。
+> 我们说过与做过的一切，世界的一切无限可能，都蕴含在这个简单的圆之中。
+> 至于你如何理解这些信息，它能带来什么，那就取决于你自己了。
 > ——《疑犯追踪》第二季第 11 集。
 
 :::note

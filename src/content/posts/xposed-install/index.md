@@ -48,7 +48,7 @@ draft: false
 ## 2. 创建 AVD
 
 ### 2.1. 打开 Virtual Device Manager
- 
+
 ![Virtual Device Manager](1.webp)
 
 ### 2.2. 选择合适的 AVD
@@ -91,7 +91,7 @@ add_to_path() {
             else
                 echo "警告：目录 $dir 已经在 PATH 中"
             fi
-        else 
+        else
             echo "错误：目录 $dir 不存在"
         fi
     done
@@ -414,7 +414,7 @@ adb push ./ /sdcard/Download/xposed
 > 如果这个时候很久都发现动不了，基本上是覆盖了不该覆盖的文件，这个时候只能恢复备份的文件了。
 >
 > 此时按理说应该在 `adb shell` 中继续执行 `sync` 以确保文件同步到 AVD 中，但实际操作中并未发现需要执行 `sync`，不过建议还是执行一下。
- 
+
 ## 7.4. 重启 AVD
 
 执行 `adb reboot` 重启 AVD，重启后打开 `Xposed Installer` 应该能看到如下结果：
