@@ -44,14 +44,10 @@ const keywords = siteConfig.keywords;
 // Favicons
 const favicons: Favicon[] =
 	siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
-
-// CDN 预连接域名（用于 Mermaid 等第三方资源）
-const cdnDomains = ["https://cdn.jsdelivr.net", "https://unpkg.com"];
 ---
 
 <!-- SEO Meta Tags -->
 <title>{title}</title>
-<meta charset="UTF-8" />
 <meta name="description" content={description || title} />
 {
 	keywords && keywords.length > 0 && (
@@ -96,14 +92,11 @@ const cdnDomains = ["https://cdn.jsdelivr.net", "https://unpkg.com"];
 	))
 }
 
-<!-- CDN 预连接 -->
-{
-	cdnDomains.map((domain) => (
-		<link rel="preconnect" href={domain} crossorigin />
-	))
-}
+<!-- 字体通过构建脚本压缩到 /assets/font/ 目录，此处不再预加载以避免 404 -->
+<!-- 字体在构建时通过 scripts/compress-fonts.js 处理并复制到 dist/ -->
 
-
+<!-- 预连接 Iconify API 以减少图标加载延迟 -->
+<link rel="preconnect" href="https://api.iconify.design" crossorigin />
 
 <!-- Set the theme before the page is rendered to avoid a flash -->
 <script

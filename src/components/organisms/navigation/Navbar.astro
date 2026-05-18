@@ -37,10 +37,10 @@ const links: NavBarLink[] = navBarConfig.links.map(
 );
 
 const rawLogo = siteConfig.navbarTitle?.logo;
-const logoSrc = rawLogo ? (rawLogo.match(/^(http|https|\/\/)/) ? rawLogo : url(rawLogo)) : undefined;
+const logoSrc = rawLogo?.match(/^(http|https|\/\/)/) ? rawLogo : rawLogo ? url(rawLogo) : "";
 
 const rawIcon = siteConfig.navbarTitle?.icon;
-const iconSrc = rawIcon ? (rawIcon.match(/^(http|https|\/\/)/) ? rawIcon : url(rawIcon)) : undefined;
+const iconSrc = rawIcon?.match(/^(http|https|\/\/)/) ? rawIcon : rawIcon ? url(rawIcon) : "";
 
 const isLogoExternal = rawLogo?.match(/^(http|https|\/\/)/);
 const isIconExternal = rawIcon?.match(/^(http|https|\/\/)/);
@@ -70,10 +70,10 @@ const iconWebpSrc = hasIconPngFallback ? iconSrc?.replace(/\.png$/i, ".webp") : 
                             {hasIconPngFallback ? (
                                 <picture>
                                     <source srcset={iconWebpSrc} type="image/webp" />
-                                    <img src={iconSrc} alt={siteConfig.navbarTitle.text} class="h-[1.75rem] w-[1.75rem] mr-2 object-contain" loading="lazy" />
+                                    <img src={iconSrc} alt="" class="h-[1.75rem] w-[1.75rem] mr-2 object-contain" loading="lazy" />
                                 </picture>
                             ) : (
-                                <img src={iconSrc} alt={siteConfig.navbarTitle.text} class="h-[1.75rem] w-[1.75rem] mr-2 object-contain" loading="lazy" />
+                                <img src={iconSrc} alt="" class="h-[1.75rem] w-[1.75rem] mr-2 object-contain" loading="lazy" />
                             )}
                             <span class="dark:text-white text-black">{siteConfig.navbarTitle.text}</span>
                         </>
@@ -280,7 +280,8 @@ if (document.readyState === 'loading') {
 </script>
 
 {import.meta.env.PROD && <script is:inline define:vars={{scriptUrl: url('/pagefind/pagefind.js')}}>
-async function loadPagefind() {
+window.loadPagefind = async function() {
+    if (window.pagefind) {return;}
     try {
         const response = await fetch(scriptUrl, { method: 'HEAD' });
         if (!response.ok) {
@@ -306,11 +307,5 @@ async function loadPagefind() {
         document.dispatchEvent(new CustomEvent('pagefindloaderror'));
         console.log('Pagefind load error, event dispatched.');
     }
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadPagefind);
-} else {
-    loadPagefind();
-}
+};
 </script>}

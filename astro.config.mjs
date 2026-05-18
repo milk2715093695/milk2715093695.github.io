@@ -49,7 +49,7 @@ export default defineConfig({
 			containers: ["main"],
 			smoothScrolling: false, // 禁用平滑滚动以提升性能，避免与锚点导航冲突
 			cache: true,
-			preload: true, // swup 默认鼠标悬停预加载
+			preload: false, // 禁用预加载以提升性能
 			accessibility: true,
 			updateHead: process.env.NODE_ENV === "production",
 			updateBodyClass: false,
@@ -184,6 +184,8 @@ export default defineConfig({
 			// CSS 代码分割
 			cssCodeSplit: true,
 			cssMinify: "esbuild",
+			// 内联小型 CSS 文件以减少网络请求
+			inlineStylesheets: "auto",
 			// 生产环境移除 console 和 debugger
 			minify: "esbuild",
 			rollupOptions: {
