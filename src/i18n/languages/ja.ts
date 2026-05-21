@@ -277,6 +277,7 @@ export const ja: Translation = {
 	[Key.passwordProtectedDescription]:
 		"保護されたコンテンツを表示するにはパスワードを入力してください。",
 	[Key.postEncrypted]: "暗号化済み",
+	[Key.postEncryptedMessage]: "この記事は暗号化されています",
 	[Key.passwordPlaceholder]: "パスワードを入力",
 	[Key.passwordUnlock]: "ロック解除",
 	[Key.passwordUnlocking]: "ロック解除中...",
@@ -343,8 +344,8 @@ export const ja: Translation = {
 	[Key.copied]: "コピーしました",
 	[Key.copyLink]: "リンクをコピー",
 	[Key.savePoster]: "ポスターを保存",
-	[Key.scanToRead]: "QRコードで読む",
-	[Key.shareOnSocial]: "シェア",
+	[Key.scanToRead]: "出典元",
+	[Key.shareOnSocial]: "共有",
 	[Key.shareOnSocialDescription]:
 		"この記事が役に立った場合は、ぜひ他の人とシェアしてください！",
 

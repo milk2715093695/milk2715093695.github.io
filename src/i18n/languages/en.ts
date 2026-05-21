@@ -273,6 +273,7 @@ export const en: Translation = {
 	[Key.passwordProtectedDescription]:
 		"Please enter the password to view the protected content",
 	[Key.postEncrypted]: "Encrypted",
+	[Key.postEncryptedMessage]: "This post is encrypted",
 	[Key.passwordPlaceholder]: "Enter password",
 	[Key.passwordUnlock]: "Unlock",
 	[Key.passwordUnlocking]: "Unlocking...",
@@ -339,7 +340,7 @@ export const en: Translation = {
 	[Key.copied]: "Copied",
 	[Key.copyLink]: "Copy Link",
 	[Key.savePoster]: "Save Poster",
-	[Key.scanToRead]: "Scan to Read",
+	[Key.scanToRead]: "Source",
 	[Key.shareOnSocial]: "Share",
 	[Key.shareOnSocialDescription]:
 		"If this article helped you, please share it with others!",

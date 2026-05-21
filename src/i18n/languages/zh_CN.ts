@@ -217,6 +217,7 @@ export const zh_CN: Translation = {
 	[Key.passwordProtectedTitle]: "此内容受密码保护",
 	[Key.passwordProtectedDescription]: "请输入密码以查看受保护的内容",
 	[Key.postEncrypted]: "已加密",
+	[Key.postEncryptedMessage]: "该文章已加密",
 	[Key.passwordPlaceholder]: "请输入密码",
 	[Key.passwordUnlock]: "解锁",
 	[Key.passwordUnlocking]: "解锁中...",
@@ -326,7 +327,7 @@ export const zh_CN: Translation = {
 	[Key.copied]: "已复制",
 	[Key.copyLink]: "复制链接",
 	[Key.savePoster]: "保存海报",
-	[Key.scanToRead]: "扫码阅读",
+	[Key.scanToRead]: "来源网站",
 	[Key.shareOnSocial]: "分享",
 	[Key.shareOnSocialDescription]:
 		"如果这篇文章对你有帮助，欢迎分享给更多人！",
