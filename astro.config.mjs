@@ -1,13 +1,14 @@
 import sitemap from "@astrojs/sitemap";
+import mdx from '@astrojs/mdx';
 import svelte, { vitePreprocess } from "@astrojs/svelte";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import swup from "@swup/astro";
-import expressiveCode from "astro-expressive-code";
-import icon from "astro-icon";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
-import { umami } from "oddmisc";
+import expressiveCode from "astro-expressive-code";
+import icon from "astro-icon";
+import { oddmisc } from "oddmisc";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeComponents from "rehype-components";
 import rehypeExternalLinks from "rehype-external-links";
@@ -40,8 +41,10 @@ export default defineConfig({
 	output: "static",
 
 	integrations: [
-		umami({
-			shareUrl: false,
+		oddmisc({
+			umami: {
+				shareUrl: false,
+			},
 		}),
 		swup({
 			theme: false,
@@ -91,7 +94,7 @@ export default defineConfig({
 				borderColor: "none",
 				codeFontSize: "0.875rem",
 				codeFontFamily:
-					"'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+					"'JetBrains Mono Variable', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', 'Microsoft JhengHei', '微軟正黑體', 'Microsoft YaHei', '微软雅黑', 'Noto Sans HK', 'Noto Sans TC', 'Noto Sans JP', 'Noto Sans SC', 'Noto Sans KR', ui-monospace, monospace",
 				codeLineHeight: "1.5rem",
 				frames: {
 					editorBackground: "var(--codeblock-bg)",
@@ -118,6 +121,7 @@ export default defineConfig({
 			preprocess: vitePreprocess(),
 		}),
 		sitemap(),
+		mdx(),
 	],
 	markdown: {
 		remarkPlugins: [
