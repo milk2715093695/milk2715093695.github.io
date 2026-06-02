@@ -84,9 +84,9 @@ export const ja: Translation = {
 	[Key.animeEmptyLocal]:
 		"src/data/anime.tsファイルにアニメの情報を追加してください",
 	[Key.animeConfigBilibili]:
-		"src/config.tsファイルにBilibiliのvmidを設定してください",
+		"src/config/siteConfig.tsファイルにBilibiliのvmidを設定してください",
 	[Key.animeConfigBangumi]:
-		"src/config.tsファイルにBangumiのユーザーIDを設定してください",
+		"src/config/siteConfig.tsファイルにBangumiのユーザーIDを設定してください",
 
 	// 日記ページ
 	[Key.diarySubtitle]: "いつでも、どこでも生活を共有",
@@ -187,10 +187,9 @@ export const ja: Translation = {
 	[Key.rssBenefit3]: "重要な更新や記事を見逃すことを回避",
 	[Key.rssBenefit4]: "広告なしのクリーンな読書体験を楽しむ",
 	[Key.rssHowToUse]:
-		"Feedly、Inoreaderまたは他のRSSリーダーを使用してこのサイトを購読することを推奨します。",
-	[Key.rssCopied]: "RSSリンクがクリップボードにコピーされました！",
-	[Key.rssCopyFailed]:
-		"コピーに失敗しました。手動でリンクをコピーしてください",
+		"このサイトの購読はFeedly、Inoreaderまたはその他のRSSリーダーの使用をおすすめします。",
+	[Key.rssCopied]: "RSSのリンクをクリップボードにコピーしました!",
+	[Key.rssCopyFailed]: "コピーに失敗しました。リンクを手動で追加してください。",
 
 	// Atomページ
 	[Key.atom]: "Atomフィード",
@@ -271,9 +270,8 @@ export const ja: Translation = {
 	[Key.noData]: "データなし",
 
 	// パスワード保護
-	[Key.passwordProtected]: "パスワード保護",
-	[Key.passwordProtectedTitle]:
-		"このコンテンツはパスワードで保護されています",
+	[Key.passwordProtected]: "パスワードで保護されています",
+	[Key.passwordProtectedTitle]: "このコンテンツはパスワードで保護されています",
 	[Key.passwordProtectedDescription]:
 		"保護されたコンテンツを表示するにはパスワードを入力してください。",
 	[Key.postEncrypted]: "暗号化済み",
