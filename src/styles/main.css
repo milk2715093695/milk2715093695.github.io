@@ -19,27 +19,13 @@
 
 /* Migrate from v3 config */
 @theme {
-  --font-sans: "Roboto", "sans-serif", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: var(--font-body), var(--font-cjk), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --breakpoint-md: 768px;
   --breakpoint-lg: 1280px;
   --breakpoint-xl: 1920px;
 }
 
-@font-face {
-	font-family: "LXGWWenKai-Medium";
-	src: url("/assets/font/LXGWWenKaiMono-Medium.ttf") format("truetype");
-	font-weight: normal;
-	font-display: swap;
-    unicode-range: U+4E00-9FFF, U+3400-4DBF;
-}
-
-@font-face {
-	font-family: "JetBrains-Medium";
-	src: url("/assets/font/JetBrainsMonoNLNerdFontMono-Medium.ttf") format("truetype");
-	font-weight: normal;
-	font-display: swap;
-}
 
 /* 确保平滑滚动，并稳定滚动条宽度以避免布局左右抖动 */
 html {

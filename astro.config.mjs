@@ -6,7 +6,7 @@ import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-s
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import swup from "@swup/astro";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
 import { oddmisc } from "oddmisc";
@@ -37,6 +37,39 @@ export default defineConfig({
 	site: "https://milk2715093695.github.io",
 
 	// base: "/",
+
+	fonts: [
+		{
+			name: "JetBrains-Medium",
+			cssVariable: "--font-jetbrains",
+			provider: fontProviders.local(),
+			options: {
+				variants: [
+					{
+						src: ["./src/assets/fonts/JetBrainsMonoNLNerdFontMono-Medium.ttf"],
+						weight: "400",
+						style: "normal",
+					},
+				],
+			},
+			fallbacks: ["monospace"],
+		},
+		{
+			name: "LXGWWenKai-Medium",
+			cssVariable: "--font-cjk",
+			provider: fontProviders.local(),
+			options: {
+				variants: [
+					{
+						src: ["./src/assets/fonts/LXGWWenKaiMono-Medium.ttf"],
+						weight: "500",
+						style: "normal",
+					},
+				],
+			},
+			fallbacks: ["sans-serif"],
+		},
+	],
 	trailingSlash: "always",
 	compressHTML: true,
 
@@ -104,7 +137,7 @@ export default defineConfig({
 				borderColor: "none",
 				codeFontSize: "0.875rem",
 				codeFontFamily:
-					"'JetBrains Mono Variable', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', 'Microsoft JhengHei', '微軟正黑體', 'Microsoft YaHei', '微软雅黑', 'Noto Sans HK', 'Noto Sans TC', 'Noto Sans JP', 'Noto Sans SC', 'Noto Sans KR', ui-monospace, monospace",
+					"var(--font-jetbrains-mono), SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
 				codeLineHeight: "1.5rem",
 				frames: {
 					editorBackground: "var(--codeblock-bg)",

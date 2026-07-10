@@ -68,3 +68,4 @@ src/data/bilibili-data.json
 *.psd~
 *.cmo3
 *.vtube.json
+instructor/
