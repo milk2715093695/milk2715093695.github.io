@@ -53,7 +53,7 @@ export default defineConfig({
 					},
 				],
 			},
-			fallbacks: ["monospace"],
+			fallbacks: [],
 		},
 		{
 			name: "LXGWWenKai-Medium",
