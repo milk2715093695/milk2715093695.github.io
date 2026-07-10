@@ -72,7 +72,7 @@ export function generatePermalinkSlug(post: CollectionEntry<"posts">): string {
 		if (post.data.alias) {
 			return post.data.alias.replace(/^\/+/, "").replace(/\/+$/, "");
 		}
-		// 否则使用文件名
+		// 否则使用 Astro 自动生成的 slug
 		return removeFileExtension(post.id);
 	}
 
