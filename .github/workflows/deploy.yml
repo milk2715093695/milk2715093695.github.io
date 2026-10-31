@@ -37,6 +37,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Verify anime snapshot
+        run: test -s src/data/anime-snapshots/bangumi.json
+
       - name: Build site
         run: pnpm build
 
