@@ -130,10 +130,17 @@ export const LinkPresets: Record<string, NavBarLink> = {
 	},
 	GitHub: {
 		name: "GitHub",
-		url: "https://github.com/LyraVoid/Shirone",
+		url: "https://github.com/milk2715093695",
 		icon: "fa7-brands:github",
 		external: true,
 		pageKey: "github",
+	},
+	Bilibili: {
+		name: "Bilibili",
+		url: "https://space.bilibili.com/1573375437",
+		icon: "fa7-brands:bilibili",
+		external: true,
+		pageKey: "bilibili",
 	},
 };
 
@@ -141,26 +148,15 @@ const defaultNavBarConfig: NavBarConfig = {
 	links: [
 		LinkPresets.Home,
 		LinkPresets.Archive,
-		LinkPresets.Friends,
-		LinkPresets.Moments,
 		LinkPresets.Anime,
-		LinkPresets.Compass,
-		LinkPresets.Albums,
 		{
 			name: i18n(I18nKey.more),
 			icon: "material-symbols:apps-rounded",
 			children: [
-				LinkPresets.Timeline,
-				LinkPresets.Projects,
 				LinkPresets.Devices,
-				LinkPresets.Games,
-				LinkPresets.Skills,
-				// 分类/标签入口不进导航菜单（避免菜单项过多），预设已登记指向独立页面，
-				// 需要时取消注释即可
-				// LinkPresets.Categories,
-				// LinkPresets.Tags,
 				LinkPresets.About,
 				LinkPresets.GitHub,
+				LinkPresets.Bilibili,
 			],
 		},
 	],
