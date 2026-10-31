@@ -925,7 +925,10 @@
 				"modules": ["src/utils/fancybox-handler.ts"],
 				"network": ["author-declared image URLs only"]
 			},
-			"docs": ["src/content/posts/image-grid-demo.md", "docs/markdown-extensions.md"],
+			"docs": [
+				"src/content/posts/image-grid-demo.md",
+				"docs/markdown-extensions.md"
+			],
 			"tests": [
 				"tests/plugins/image-grid.test.mjs",
 				"tests/site/image-grid.spec.ts"
@@ -1102,7 +1105,10 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": ["src/content/posts/math-discussion-i/index.md", "docs/markdown-extensions.md"],
+			"docs": [
+				"src/content/posts/math-discussion-i/index.md",
+				"docs/markdown-extensions.md"
+			],
 			"tests": [
 				"tests/plugins/markdown/katex-version.test.mjs",
 				"tests/site/math.spec.ts",
@@ -1133,7 +1139,10 @@
 				"modules": ["src/utils/mermaid.ts", "src/utils/mermaid-interaction.ts"],
 				"network": []
 			},
-			"docs": ["src/content/posts/campus-network/index.md", "docs/markdown-extensions.md"],
+			"docs": [
+				"src/content/posts/campus-network/index.md",
+				"docs/markdown-extensions.md"
+			],
 			"tests": ["tests/site/mermaid.spec.ts"],
 			"notes": [
 				"客户端脚本与样式仅在页面含 Mermaid 语法时按需加载；初始化必须覆盖直接加载、Swup、主题变化和文章解密。"
@@ -1218,7 +1227,10 @@
 				"modules": ["src/utils/spoilers.ts"],
 				"network": []
 			},
-			"docs": ["src/content/posts/math-discussion-i/index.md", "docs/markdown-extensions.md"],
+			"docs": [
+				"src/content/posts/math-discussion-i/index.md",
+				"docs/markdown-extensions.md"
+			],
 			"tests": [
 				"tests/plugins/markdown/inline/spoilers.test.mjs",
 				"tests/site/spoilers.spec.ts"
