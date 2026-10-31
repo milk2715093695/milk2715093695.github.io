@@ -37,8 +37,9 @@ export const devicesData: DeviceItem[] = [
 			{ key: "os", label: "系统", value: "LineageOS 23（Android 16）" },
 		],
 		description: "调试与备用平板，用来测试 Android 环境和阅读。",
+		image: "/images/device/xiaomi-pad-5.webp",
 		icon: "material-symbols:tablet-android",
-		link: "https://www.mi.com/xiaomi-pad-5",
+		link: "https://www.mi.com/xiaomipad5",
 		featured: false,
 	},
 ];
