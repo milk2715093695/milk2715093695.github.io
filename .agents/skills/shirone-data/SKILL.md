@@ -10,7 +10,7 @@ description: Managing Shirone data-backed pages and albums - adding or editing a
 - 文章和动态写入 `src/content/`，使用 `shirone-writing`。
 - 页面行为、开关、排序和凭据写入 `src/config/`，使用 `shirone-config`。
 - 具体条目内容写入 `src/data/`；不要把内容实体塞进 config。
-- 相册不是 Content Collection，而是 `public/images/albums/` 下的目录数据。
+- 相册不是 Content Collection，而是 public/images/albums/ 下的目录数据（当前站点已关闭相册功能）。
 
 ## 数据页工作流
 
@@ -20,7 +20,7 @@ description: Managing Shirone data-backed pages and albums - adding or editing a
 
 ## 相册工作流
 
-每个相册是 `public/images/albums/<id>/` 目录：
+每个相册是 public/images/albums/<id>/ 目录：
 
 - 本地照片模式需要 `info.json`、`cover.webp` 或 `cover.jpg`，其余图片直接放在同目录；文件名可用 `标题_标签1_标签2.ext`。
 - 外部照片模式在 `info.json` 设置 `"mode": "external"`、`cover` 和 `photos` 数组；每个照片至少提供 `src`，可选 `thumbnail`、`alt`、`title`、`tags`、日期和相机信息。

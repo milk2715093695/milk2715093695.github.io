@@ -81,13 +81,17 @@ describe("Feature Data & Resolver Tests", () => {
 	});
 
 	it("resolveDevicesData applies disabledIds correctly", () => {
+		const items = [
+			{ id: "phone", name: "Phone" },
+			{ id: "tablet", name: "Tablet" },
+		];
 		const config = {
 			enable: true,
 			categories: [],
-			disabledIds: ["iphone-16-pro"],
+			disabledIds: ["tablet"],
 		};
-		const resolved = resolveDevicesData(config);
-		assert.ok(resolved.some((d) => d.id === "macbook-pro-16"));
-		assert.ok(!resolved.some((d) => d.id === "iphone-16-pro"));
+		const resolved = resolveDevicesData(config, items);
+		assert.ok(resolved.some((d) => d.id === "phone"));
+		assert.ok(!resolved.some((d) => d.id === "tablet"));
 	});
 });

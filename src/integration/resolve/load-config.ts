@@ -3,6 +3,7 @@ import {
 	existsSync,
 	mkdirSync,
 	readdirSync,
+	realpathSync,
 	statSync,
 	unlinkSync,
 	writeFileSync,
@@ -134,12 +135,21 @@ function overlayEsbuildPlugin(
 				if (file) return { path: redirect(file) };
 				// `resolveDir` is the importer's own directory, so for an entry
 				// override it equals `configDir` exactly rather than a subpath.
-				const dir = normalisePath(args.resolveDir);
-				const configRoot = normalisePath(paths.configDir);
+				// Resolve symlinks first: macOS exposes /var as /private/var, and
+				// esbuild canonicalises resolveDir while configDir stays as passed.
+				const canonicalPath = (value: string): string => {
+					try {
+						return normalisePath(realpathSync(value));
+					} catch {
+						return normalisePath(value);
+					}
+				};
+				const dir = canonicalPath(args.resolveDir);
+				const configRoot = canonicalPath(paths.configDir);
 				const fromUserConfig =
 					dir === configRoot || dir.startsWith(`${configRoot}/`);
 				if (!fromUserConfig) return undefined;
-				const relativeToConfig = relative(paths.configDir, args.resolveDir);
+				const relativeToConfig = relative(configRoot, dir);
 				const sibling = probeFile(
 					join(paths.packageSrc, "config", relativeToConfig, args.path),
 				);
