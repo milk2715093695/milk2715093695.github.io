@@ -55,6 +55,9 @@ draft: false
   - [4.1. 证明步骤 1：证明非零有理数正切值都是无理数](#41-证明步骤-1证明非零有理数正切值都是无理数)
   - [4.2. 证明步骤 2：证明圆周率是无理数](#42-证明步骤-2证明圆周率是无理数)
   - [4.3. 补充 1：连分数展开的推导](#43-补充-1连分数展开的推导)
+- [5. 如果圆周率真的是一串完全随机的数字串，那么一个人的身份证可能会出现在第几位？](#5-如果圆周率真的是一串完全随机的数字串那么一个人的身份证可能会出现在第几位)
+  - [5.1. 对于任意特定的数字串](#51-对于任意特定的数字串)
+  - [5.2. 对于一个特定的身份证](#52-对于一个特定的身份证)
 - [附录](#附录)
   - [附录 A. 计算 pi 的前 n 位小数分布的 Python 代码](#附录-a-计算-pi-的前-n-位小数分布的-python-代码)
 - [参考文献](#参考文献)
@@ -113,13 +116,13 @@ $$
 
 ### 3.1. 百度百科词条：合取数
 
-很多人会在这种话题下提到“合取数”这个概念，事实上我一开始在评论区的科普也提到了这个名词，借着这个机会我也想更加具体的了解它，比如它是在哪篇论文中提出的？它的英文名字是什么？等等。
+很多人会在这种话题下提到“合取数”这个概念，事实上我一开始在评论区的科普也提到了这个名词，借着这个机会我也想更加具体地了解它，比如它是在哪篇论文中提出的？它的英文名字是什么？等等。
 
 然而，当我查询这个词条的时候，却遇到了让我非常惊讶的事情：在[合取数的百度百科词条](https://baike.baidu.com/item/%E5%90%88%E5%8F%96%E6%95%B0/16404539)中，我竟然没有找到任何关于这个词的英文名或者文献，甚至于，这个词条连一个参考文献都没有？
 
 ![合取数的百度百科词条](2.webp)
 
-我在词条讨论区提问也没有收到任何回复，经查，这个词条最早由一名名为 zistrong 的用户于 2014-12-18 编辑，而我在中文互联网上找到比较早的一篇是来自[π里包含了所有可能的数字组合吗？](https://blog.csdn.net/weixin_34113237/article/details/91911608)，我写到这才发现，我正在做的内容十几年前就有人在干了（虽然本文还扩展了很多另外的东西）。它发布于 2014-12-17，和百度百科词条的创建时间只相差一天，不知道是不是巧合，另外，这篇文章声称自己转载自[开源中国的一篇文章](https://my.oschina.net/oospace/blog/357356)，但是这个链接我无法访问。
+我在词条讨论区提问也没有收到任何回复，经查，这个词条最早由一名名为 zistrong 的用户于 2014-12-18 编辑，而我在中文互联网上找到的比较早的一篇是来自[π里包含了所有可能的数字组合吗？](https://blog.csdn.net/weixin_34113237/article/details/91911608)，我写到这里才发现，我正在做的内容十几年前就有人在干了（虽然本文还扩展了很多另外的东西）。它发布于 2014-12-17，和百度百科词条的创建时间只相差一天，不知道是不是巧合，另外，这篇文章声称自己转载自[开源中国的一篇文章](https://my.oschina.net/oospace/blog/357356)，但是这个链接我无法访问。
 
 ---
 
@@ -135,7 +138,7 @@ $$
 
 理论计算机科学领域，形式语言理论中，有一个概念叫做 **析取语言（Disjunctive Language）**，也译作 **分离语言**，其定义如下：
 
-设 $L \subseteq \Sigma^*$。若 $L$ 的句法同余 $P_L$ 是恒等关系，则称 $L$ 为 **disjunctive language**。这里 $x \equiv_L y$ 当且仅当对所有 $u, v\in\Sigma^*$，$uxv \in L \Leftrightarrow uyv \in L$。等价地，对任意 $x \neq y \in \Sigma^*$，存在 $u,v \in \Sigma^*$，使得 $uxv \in L$ 与 $uyv \in L$ 恰有一个成立。直观上，任何两个不同的词，都能被某个上下文区分开（Shyr, 1977）。
+设 $L \subseteq \Sigma^*$。若 $L$ 的句法同余 $P_L$ 是恒等关系，则称 $L$ 为 **disjunctive language**。这里 $x \equiv_L y$ 当且仅当对所有 $u, v\in\Sigma^*$，$uxv \in L \Leftrightarrow uyv \in L$。等价地，对任意 $x \neq y \in \Sigma^*$，存在 $u,v \in \Sigma^*$，使得 $uxv \in L$ 与 $uyv \in L$ 恰有一个成立。直观上，任何两个不同的词，都能被某个上下文区分开（Shyr, 1977）[1]。
 
 举两个具体的例子：
 
@@ -186,7 +189,7 @@ Simply Normal Number 是 Normal Number 的一个子集，它们的定义如下�
 
 > A real number is said to be **simply normal** in an integer base $b$ if its infinite sequence of digits is distributed uniformly in the sense that each of the digit values has the same natural density $\frac{1}{b}$. A number is said to be normal in base $b$ if, for every positive integer $n$, all possible strings $n$ digits long have density $b^{-n}$.
 >
-> 来源：[HandWiki - Normal number](https://handwiki.org/wiki/Normal_number)
+> 来源：[HandWiki - Normal number](https://handwiki.org/wiki/Normal_number)[2]
 
 :::notice
 值得注意的是 HandWiki 在学术上并不是一个非常权威的网站。但是既然是科普，那么学术权威性就不一定那么重要了。
@@ -197,7 +200,7 @@ Simply Normal Number 是 Normal Number 的一个子集，它们的定义如下�
 用更加形式化的语言：
 > 设 $b$ 是大于 $1$ 的整数，$x$ 是实数。考虑以 $b$ 为底的位值记数法中 $x$ 的数字序列。若 $s$ 是以 $b$ 为底的有限数字序列，我们以 $N(s, n)$ 表示字串 $s$ 在 $x$ 的开首 $n$ 个数字出现次数。数 $x$ 称为以 $b$ 为底正规当且仅当对任意长度 $k$ 的字串 $s$ 有：$\lim_{n \to \infty} \frac{N(s, n)}{n} = \frac{1}{b^k}$。
 >
-> 来源：[百度百科 - 正规数](https://baike.baidu.com/item/%E6%AD%A3%E8%A7%84%E6%95%B0/8660908)
+> 来源：[百度百科 - 正规数](https://baike.baidu.com/item/%E6%AD%A3%E8%A7%84%E6%95%B0/8660908)[3]
 
 不难看出，只要 $\pi$ 是一个 Normal Number，那么它必然会出现所有数字组合。
 
@@ -210,11 +213,11 @@ Simply Normal Number 是 Normal Number 的一个子集，它们的定义如下�
 首先，我们计算 $0$ 的出现概率的极限：
 在前 $n$ 位中，我们考虑最后一个完整的 $0$ 到 $9$ 的重复序列，假设这个序列中，每一个数码出现的次数都是 $k$，那么，在截断到这一位后，$0$ 出现了 $\sum\limits_{i=1}^{k} i = \frac{k(k + 1)}{2}$，总共有 $\sum\limits_{i=1}^{k} 10 \cdot i = 5k(k + 1)$，由于这是最后一个完整的序列，因此在这之后到下一次产生一个完整序列，$0$ 的出现概率是先增加后减小的，并且两端都恰好是 $\frac{1}{10}$，因此出现概率 $\frac{\frac{k(k + 1)}{2} + (k + 1)}{5k(k + 1) + (k + 1)} \geq P_0 \geq \frac{1}{10}$，考虑 $\lim_{k \to \infty} \frac{\frac{k(k + 1)}{2} + (k + 1)}{5k(k + 1) + (k + 1)} = \lim_{k \to \infty} \frac{k + 1}{10k + 2} = \frac{1}{10}$，根据夹逼定理，极限存在，并且 $\lim_{k \to \infty} P_0 = \frac{1}{10}$。
 
-类似的，可以证明 $1$ 到 $9$ 的出现概率都是 $\frac{1}{10}$。因此，$c$ 是 Simply Normal Number，并且不包含 $10$ 这个数字组合。
+类似地，可以证明 $1$ 到 $9$ 的出现概率都是 $\frac{1}{10}$。因此，$c$ 是 Simply Normal Number，并且不包含 $10$ 这个数字组合。
 
 ### 3.4. 圆周率是否是 Simply Normal Number？
 
-据前文所属，如果 $\pi$ 是一个 Normal Number，那出现所有数字组合是必然的，这也是数学界正在努力的方向，然而，目前数学界还没有证明 $\pi$ 是一个 Normal Number，甚至，据我所知，目前数学界还没有证明 $\pi$ 是一个 Simply Normal Number。
+据前文所述，如果 $\pi$ 是一个 Normal Number，那出现所有数字组合是必然的，这也是数学界正在努力的方向，然而，目前数学界还没有证明 $\pi$ 是一个 Normal Number，甚至据我所知，目前数学界还没有证明 $\pi$ 是一个 Simply Normal Number。
 
 但是我们可以做一个小实验看一下 $\pi$ 的前 $n$ 位的分布。
 
@@ -255,18 +258,18 @@ $$
 $$
 
 化简得到：
-$f_{k+2} = \frac{Bkq - Ap^2}{B}$，而类似的，也有 $0 < f_{k+2} < 1$，而这个表达式又说明了 $f_{k+2}$ 也是有理数，那么，令 $C = Bkq - Ap^2$，有 $f_{k+2} = \frac{C}{B}$，于是有 $A > B > C > 0$，类似地，这个过程可以不断的进行下去，得到 $A > B > C > D > \cdots > 0$，但是，它们都是有限的正整数，而严格大于导致了每一次至少让分子变小 $1$，因此这个过程最多进行 $A$ 次，这与之前的这个过程必须无限进行矛盾，因此，反证假设 $f_k$ 是有理数是不成立的，因此 $\tan \frac{p}{q}$ 的值都是无理数。
+$f_{k+2} = \frac{Bkq - Ap^2}{B}$，而类似地，也有 $0 < f_{k+2} < 1$，而这个表达式又说明了 $f_{k+2}$ 也是有理数，那么，令 $C = Bkq - Ap^2$，有 $f_{k+2} = \frac{C}{B}$，于是有 $A > B > C > 0$，类似地，这个过程可以不断地进行下去，得到 $A > B > C > D > \cdots > 0$，但是，它们都是有限的正整数，而严格大于导致了每一次至少让分子变小 $1$，因此这个过程最多进行 $A$ 次，这与之前的这个过程必须无限进行矛盾，因此，反证假设 $f_k$ 是有理数是不成立的，因此 $\tan \frac{p}{q}$ 的值都是无理数。
 
 ### 4.2. 证明步骤 2：证明圆周率是无理数
 
 由于在 4.1 节中，我们已经证明了，如果 $x$ 是有理数，那么 $\tan x$ 是无理数，而 $\tan \frac{\pi}{4} = 1$，这并不是无理数，因此 $\frac{\pi}{4}$ 是无理数，由于 $\pi = 4 \times \frac{\pi}{4}$，因此 $\pi$ 是无理数。证毕。
 
-> 这条证明思路最早由 Lambert 在 1768 年提出。
+> 这条证明思路最早由 Lambert 在 1768 年提出[4]。
 
 ### 4.3. 补充 1：连分数展开的推导
 
 :::tip
-受限于篇幅和阅读成本，这部分证明是不严谨的，仅作为参考，其收敛域不做讨论，尽管要在证明中用到实际上是需要说明收敛域的。此外，这里给出的 $\sin x$ 和 $\cos x$ 的泰勒展开也不做深入，因为有关这些是非常容易找到资料的。
+受限于篇幅和阅读成本，这部分证明是不严谨的，仅作为参考，其收敛域不做讨论，尽管要在证明中用到实际上是需要说明收敛域的。此外，这里给出的 $\sin x$ 和 $\cos x$ 的泰勒展开也不做深入，因为相关内容很容易找到资料。
 :::
 
 首先，给出几个泰勒展开式：
@@ -355,6 +358,66 @@ $$
 
 于是，我们得到了 $\tan x$ 的连分数展开式。
 
+## 5. 如果圆周率真的是一串完全随机的数字串，那么一个人的身份证可能会出现在第几位？
+
+前面已经提到过，圆周率确实表现得像是一串完全随机的数字串，那么，来研究一下真的随机数字串会是什么样子。
+
+### 5.1. 对于任意特定的数字串
+
+假设 $m$ 位目标串 $\omega = \omega_1 \omega_2 \cdots \omega_m$，$T$ 是 $\omega$ 第一次在序列中出现时 $\omega$ 尾部所在的位置（从 $1$ 开始）。
+
+定义 $B(\omega) = \{ r:\ 1 \leq r \leq m,\ \omega_1 \cdots \omega_r = \omega_{m-r+1} \cdots \omega_m \}$ 是所有满足前 $r$ 位与后 $r$ 位相同的 $r$ 的集合，包含 $r = m$，例如，对于序列 $113411$，$B(\omega) = \{ 1, 2, 6 \}$。
+
+首先给出结论：$\mathbb{E}[T] = \sum\limits_{r \in B(\omega)} 10^r$，若仍然以 $113411$ 为例，$\mathbb{E}[T] = 10^1 + 10^2 + 10^6 = 1000110$。
+
+接下来使用赌徒法来计算这个期望。
+
+假设每个时刻 $t = 1, 2, \dots$，各自来一个赌徒，每个赌徒携带 $1$ 元钱，对于第 $i$ 个赌徒，他进行如下的赌局：
+
+1. 猜测序列的第 $i$ 位是 $\omega_1$，如果猜错，资金归零，赌徒退出。
+2. 如果猜对，资金变为原来的 $10$ 倍，并等到下一个时刻继续下注。
+3. 猜测序列的第 $i+1$ 位是 $\omega_2$，如果猜错，资金归零，赌徒退出。
+4. 如果猜对，资金变为原来的 $10$ 倍，并等到下一个时刻继续下注。
+5. 以此类推
+
+假设赌徒当前的资金是 $X$，下一次猜测，猜中的概率是 $\frac{1}{10}$，那么下一次猜测后，赌徒资金的期望是 $\mathbb{E}[X] = \frac{1}{10} \times 10X + \frac{9}{10} \times 0 = X$，也就是说，这是一个公平的游戏，赌场中存在的总收入期望和赌徒的总资金期望是相等的。
+
+$T$ 是 $\omega$ 第一次在序列中出现时 $\omega$ 尾部所在的位置，当 $t = T$ 时刻，赌场上的总收入为 $T$。下面计算总资金。
+
+由于此前 $\omega$ 从未完整出现在序列中，所以此时 $1$ 到 $T - m$ 位的赌徒都已经破产，考虑一个在时刻 $t_r = T - r + 1$ 入场的赌徒，如果他没有破产，由于他猜测第 $t_r + i - 1$ 位是 $\omega_i,\, i = 1, 2, \dots, r$，并且全部正确，因此他猜测的 $\omega$ 的前 $r$ 位，恰好等于 $\omega$ 的后 $r$ 位，并且他获得了 $10^r$ 元。
+
+因此 $\mathbb{E}[\text{总资金}] = \sum\limits_{r \in B(\omega)} 10^r = \mathbb{E}[T]$。
+
+### 5.2. 对于一个特定的身份证
+
+首先需要了解身份证的各位数字由什么组成：
+
+$$
+\underbrace{
+  \underbrace{11}_{\text{省份代码}}
+  \underbrace{01}_{\text{城市代码}}
+  \underbrace{01}_{\text{区县代码}}
+}_{\text{地址码（6位）}}
+\underbrace{19000101}_{\text{出生日期码（8位）}}
+\underbrace{
+  \underbrace{00}_{\text{顺序编号}}
+  \underbrace{0}_{\text{性别码}}
+}_{\text{顺序码（3位）}}
+\underbrace{6}_{\text{校验码（1位）}}
+$$
+
+这是一位 1900 年 1 月 1 日出生在北京市东城区的女性。
+
+:::important
+这当然不是一个真实存在的人，只是为了方便说明
+:::
+
+对于 $\mathbb{E}[T] = \sum\limits_{r \in B(\omega)} 10^r$，其最小值显然是 $10^{18}$。经过程序枚举合法的（符合标准，但是未必对应到真实存在的人）地址码、出生日期和顺序码组合后，使该期望最大的合法身份证，其期望为 $10^{18} + 10^{10} + 10^2 + 10$。
+
+因此“圆周率中可能有我的身份证号吗”对于一个特定的身份证而言，如果圆周率完全表现得像是一个纯随机的序列，平均也要找到 $10^{18}$ 以上的位数才会遇到，而目前为止 $\pi$ 已经被计算到 314 万亿位也就是 $10^{14}$ 量级，因此，对于一个人而言，圆周率中包含他的身份证号的概率是极低的。
+
+但是，目前人类已经确认的是：圆周率包含全部 $10^{13}$ 种 13 位数字组合[5]。
+
 ## 附录
 
 ### 附录 A. 计算 pi 的前 n 位小数分布的 Python 代码
@@ -430,6 +493,8 @@ if __name__ == "__main__":
 ```
 
 ## 参考文献
-1. [HandWiki - Normal number](https://handwiki.org/wiki/Normal_number)
-2. [百度百科 - 正规数](https://baike.baidu.com/item/%E6%AD%A3%E8%A7%84%E6%95%B0/8660908)
-3. H. J. Shyr. [Disjunctive languages on a free monoid](https://doi.org/10.1016/S0019-9958(77)80008-9). *Information and Control*, 34(2):123–129, 1977.
+1. H. J. Shyr. [Disjunctive languages on a free monoid](https://doi.org/10.1016/S0019-9958(77)80008-9). *Information and Control*, 34(2):123–129, 1977.
+2. [HandWiki - Normal number](https://handwiki.org/wiki/Normal_number)
+3. [百度百科 - 正规数](https://baike.baidu.com/item/%E6%AD%A3%E8%A7%84%E6%95%B0/8660908)
+4. J. H. Lambert. [Mémoire sur quelques propriétés remarquables des quantités transcendantes circulaires et logarithmiques](https://www.kuttaka.org/~JHL/L1768b.html). *Mémoires de l'Académie royale des sciences de Berlin*, 1761/1768:265–322.
+5. Guinness World Records. [Most accurate value of pi](https://www.guinnessworldrecords.com/world-records/66179-most-accurate-value-of-pi). 2025-11-18.
